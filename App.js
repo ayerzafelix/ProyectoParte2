@@ -1,37 +1,23 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import {auth} from ".src/firebase/config";
-import { registerRootComponent } from 'expo';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import Register from './src/screens/Register/Register';
+import Login from './src/screens/Login/Login';
+import Home from './src/screens/Home/Home';
+
+const Stack = createNativeStackNavigator();
 
 
 export default function App() {
-
-  function register(email, pass){
-    auth.createUserWithEmailAndPassword(email, pass)
-     .then( response => {
-         console.log(response);
-      })     
-     .catch( error => {
-       console.log(error);
-     })
-  }
-
-  function login(email, pass){
-    auth.signInWithEmailAndPassword(email, pass)
-     .then((response) => {
-         console.log(response);
-     })
-     .catch(error => {
-       console.log(error);
-     })
-  }
- 
-
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer style={styles.container}>
+    <Stack.Navigator>
+      <Stack.Screen name='Registro' component={Register} options={ { headerShown: false } }/>
+      <Stack.Screen name='Login' component={Login} options={ { headerShown: false } }/>
+      <Stack.Screen name='Home' component={Home} options={ { headerShown: false } }/>
+    </Stack.Navigator>
+  </NavigationContainer>
   );
 }
 
