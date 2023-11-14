@@ -1,4 +1,4 @@
-import react, { Component } from 'react';
+import React, { Component } from 'react';
 import {db, auth } from '../../firebase/config';
 import {TextInput, TouchableOpacity, View, Text, StyleSheet} from 'react-native';
 
@@ -8,118 +8,156 @@ class Register extends Component {
         this.state={
             email:'',
             userName:'',
-            password:''
+            password:'',
+            biografia:'',
+            disabled: true,
+            errors: ''
         }
     }
-    componentDidMount(){
-        console.log("Chequear si el usuario está loguado en firebase.");
-        // Puse la funcionalidad aquí para probarla. No necesariamente debe ir en este componente.
 
-        auth.onAuthStateChanged( user => {
-            console.log(user)
-            if( user ){
-                //Redirigir al usuario a la home del sitio.
-                this.props.navigation.navigate('Menu')
-            }
 
-        } )
-
-    }
-
-    register (email, pass, userName){
+    registrarElUsuario (email, pass, userName, biografia){
         auth.createUserWithEmailAndPassword(email, pass)
-            .then( response => {
-                //Cuando firebase responde sin error
-                console.log('Registrado ok', response);
-
-                 //Cambiar los estados a vacío como están al inicio.
-
-                 //Crear la colección Users
+            .then(response => {
                 db.collection('users').add({
-                    owner: auth.currentUser.email,
+                    owner: email,
                     userName: userName,
-                    createdAt: Date.now(), 
+                    biografia: biografia,
+                    createdAt: Date.now(),
+                  })
+                  .then(() => {
+                    this.setState({
+                      email: '',
+                      password: '',
+                      usuario: '',
+                      biografia: '',
+                      errors: ''
+                    });
+                    auth.signInWithEmailAndPassword(email, pass)
+                  })
+                  .catch(error => {
+                       this.setState({
+                         errors: `Error al agregar información del usuario: ${error.message}`
+                    })
+                  })
                 })
-                .then( res => console.log(res))
-
-
-            })
-            .catch( error => {
-                //Cuando Firebase responde con un error
-                console.log(error);
-
-            })
-    }
-
-
+            .catch(error => {
+                this.setState({
+                    errors: `Error al crear el usuario: ${error.message}`
+                 })
+              })
+            }
 
     render(){
         return(
-            <View style={styles.formContainer}>
-                <Text>Register</Text>
-                <TextInput
-                    style={styles.input}
+            <View style={styles.contenedor}>
+              <Text style={styles.titulo}>Register</Text>
+                <View style={styles.formulario}>
+                  <Text style={styles.error}>{this.state.errors}</Text>
+                   <TextInput
+                    style={styles.lugar}
                     onChangeText={(text)=>this.setState({email: text})}
                     placeholder='email'
                     keyboardType='email-address'
                     value={this.state.email}
                     />
-                <TextInput
-                    style={styles.input}
+                   <TextInput
+                    style={styles.lugar}
                     onChangeText={(text)=>this.setState({userName: text})}
                     placeholder='user name'
                     keyboardType='default'
                     value={this.state.userName}
                     />
-                <TextInput
-                    style={styles.input}
+                   <TextInput
+                    style={styles.lugar}
                     onChangeText={(text)=>this.setState({password: text})}
                     placeholder='password'
                     keyboardType='default'
                     secureTextEntry={true}
                     value={this.state.password}
-                />
-                <TouchableOpacity style={styles.button} onPress={()=>this.register(this.state.email, this.state.password, this.state.userName)}>
-                    <Text style={styles.textButton}>Registrarse</Text>    
-                </TouchableOpacity>
-                <TouchableOpacity onPress={ () => this.props.navigation.navigate('Login')}>
-                   <Text>Ya tengo cuenta. Ir al login</Text>
-                </TouchableOpacity>
+                   />
+                   <TextInput
+                    style={styles.lugar}
+                    onChangeText={(text)=>this.setState({biografia: text})}
+                    placeholder='biografia'
+                    keyboardType='default'
+                    value={this.state.biografia}
+                    />
+
+                {this.state.email === "" || this.state.password === "" || this.state.usuario === "" ? 
+                        <TouchableOpacity>
+                            <Text style={styles.button}>Done</Text>
+                        </TouchableOpacity>
+                    :
+                        <TouchableOpacity onPress={ () => this.registrarElUsuario ( this.state.email, this.state.password, this.state.userName, this.state.biografia)}>
+                            <Text style={styles.textButton}>Done</Text>
+                        </TouchableOpacity>
+                }
             </View>
+        </View>    
         )
     }
 }
 
 const styles = StyleSheet.create({
-    formContainer:{
-        paddingHorizontal:10,
-        marginTop: 20,
+    
+    contenedor:{
+        flex:1,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
-    input:{
-        height:20,
-        paddingVertical:15,
+
+    formulario:{
+        backgroundColor: 'rgb(128, 128, 128)',
+        borderRadius: 8,
+        padding: 20
+    },
+        
+    titulo:{
+        fontFamily: 'monospace',
+        fontSize: 40,
+        margin: 10,
+        color: 'rgb(128, 128, 128)'     
+    },    
+
+    lugar: {   
+        height: 20,
+        fontSize: 15,
+        paddingVertical: 15,
         paddingHorizontal: 10,
-        borderWidth:1,
+        borderWidth: 1,
         borderColor: '#ccc',
-        borderStyle: 'solid',
         borderRadius: 6,
-        marginVertical:10,
+        width: '100%',
+        marginBottom: 15
     },
-    button:{
-        backgroundColor:'#28a745',
+
+    button: {
+        backgroundColor: "#fde79e",
         paddingHorizontal: 10,
         paddingVertical: 6,
-        textAlign: 'center',
-        borderRadius:4, 
-        borderWidth:1,
-        borderStyle: 'solid',
-        borderColor: '#28a745'
-    },
-    textButton:{
-        color: '#fff'
-    }
+        fontSize: 20,
+        textAlign: "center",
+        borderRadius: 6,
+        borderWidth: 1,
+        borderStyle: "solid",
+        borderColor: "#fde79e",
+        width: '100%',
+        marginBottom: 15
+      },
 
+      textButton: {
+        color: "black",
+      },
+
+      imagen: {
+        height:250,
+        borderRadius: 15,  
+      },
+      
+      error: {
+          color: "red",
+      }
 })
-
 
 export default Register;
