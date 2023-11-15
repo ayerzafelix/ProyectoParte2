@@ -38,8 +38,7 @@ componentDidMount(){
 }
 
     render() {
-        return (
-            
+        return ( 
             <NavigationContainer>
                 {this.state.logueado ?(
                    <Tab.Navigator screenOptions={({route}) => ({tabBarIcon: ({color}) => screenOptions(route, color)})}>
@@ -50,8 +49,8 @@ componentDidMount(){
                    </Tab.Navigator>)
                    : 
                    (<Tab.Navigator screenOptions={({route}) => ({tabBarIcon: ({color}) => screenOptions(route, color)})}>
-                      <Tab.Screen options = {{headerShown: false}} name="Register" component={() => <Register/>} />
                       <Tab.Screen options = {{headerShown: false}} name="Login" component={() => <Login />} />
+                      <Tab.Screen options = {{headerShown: false}} name="Register" component={() => <Register/>} />
                    </Tab.Navigator>  
                 )}
             </NavigationContainer>
@@ -75,10 +74,10 @@ const screenOptions = (route, color) => {
         iconName = 'plus';
         break;
     case 'Login':
-        iconName = 'login';
+        iconName = 'sign-in';
         break;
     case 'Register':
-        iconName = 'register';
+        iconName = 'user-plus';
         break;
     case 'Buscador':
         iconName = 'search';
@@ -86,7 +85,6 @@ const screenOptions = (route, color) => {
       default:
         break;
     }
-  
     return <Icon name={iconName} color={color} size={24} />;
   }
 
