@@ -22,7 +22,7 @@ class Login extends Component {
                  })
             .catch(error => {
                 this.setState({
-                    errors: `Error al agregar información del usuario: ${error.message}`
+                    errors: `Error al intentar loguerse: ${error.message}`
             })
          })
     }
@@ -32,7 +32,6 @@ class Login extends Component {
             <View style={styles.contenedor}>
               <Text style={styles.titulo}>Login</Text>
                 <View style={styles.formulario}>
-                  <Text style={styles.error}>{this.state.errors}</Text>
                    <TextInput
                     style={styles.lugar}
                     onChangeText={(text)=>this.setState({email: text})}
@@ -49,17 +48,18 @@ class Login extends Component {
                     value={this.state.password}
                    />
 
-                {this.state.email === "" || this.state.password === "" || this.state.usuario === "" ? 
-                        <TouchableOpacity>
-                            <Text style={styles.button}>Done</Text>
-                        </TouchableOpacity>
+                {this.state.email === "" || this.state.password === "" ? 
+                        <Text style={styles.button}>Done</Text>
                     :
                         <TouchableOpacity onPress={ () => this.loguearUsuario ( this.state.email, this.state.password)}>
-                            <Text style={styles.textButton}>Done</Text>
+                            <Text style={styles.button2}>Done</Text>
                         </TouchableOpacity>
                 }
             </View>
-        </View>    
+            <View>
+                 <Text style={styles.error}>{this.state.errors}</Text>
+            </View> 
+        </View>   
         )
     }
 }
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     },
 
     button: {
-        backgroundColor: "#fde79e",
+        backgroundColor: "rgb(192, 192, 192)",
         paddingHorizontal: 10,
         paddingVertical: 6,
         fontSize: 20,
@@ -106,7 +106,21 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         borderWidth: 1,
         borderStyle: "solid",
-        borderColor: "#fde79e",
+        borderColor: "rgb(105, 105, 105)",
+        width: '100%',
+        marginBottom: 15
+      },
+
+      button2: {
+        backgroundColor: "rgb(50, 205, 50)",
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        fontSize: 21,
+        textAlign: "center",
+        borderRadius: 6,
+        borderWidth: 1,
+        borderStyle: "solid",
+        borderColor: "rgb(105, 105, 105)",
         width: '100%',
         marginBottom: 15
       },
