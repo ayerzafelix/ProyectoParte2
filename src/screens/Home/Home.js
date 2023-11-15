@@ -1,25 +1,64 @@
-import react, { Component } from 'react';
-import {TextInput, TouchableOpacity, View, Text, StyleSheet} from 'react-native';
+import React, { Component } from 'react';
+import {auth, db} from '../../firebase/config';
+import {Text, View, FlatList, StyleSheet} from 'react-native'
+import Post from '../../components/Post/Post'
 
-class Home extends Component {
+class Home extends Component{
     constructor(){
-        super()
-        this.state={
-      
+        super();
+        this.state = {
+            posts:[]
         }
     }
 
+    componentDidMount(){
+        db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(
+            docs => {
+                let posts = [];
+                docs.forEach( doc => {
+                    posts.push({
+                        id: doc.id,
+                        data: doc.data()
+                    })
+                    this.setState({
+                        posts: posts
+                    })
+                }) 
+            }
+        )
+    }
 
 
     render(){
         return(
-            <View>
-                <Text>HOME</Text>
-            </View>
+            <>
+                <Text style={styles.text}> HOME </Text>
+                <FlatList 
+                    data={this.state.posts}
+                    keyExtractor={ onePost => onePost.id.toString()}
+                    renderItem={ ({item}) => <Post postData={item} navigation={this.props.navigation}/>}
+                />  
+            </>
         )
     }
 }
 
+const styles= StyleSheet.create ({
+
+    text: {
+        fontFamily: 'Arial, sans-serif',
+        color: '#2c3e50',
+        fontWeight: 'bold',
+        fontSize: 35,
+        textAlign: 'center',
+        backgroundColor: '#ecf0f1',
+        marginBottom: 20,
+        marginTop: 20,
+      },
+})
+
+export default Home
 
 
-export default Home;
+
+    
