@@ -19,10 +19,7 @@ class MenuBar extends Component {
     constructor(props) {
         super(props);
             this.state = {
-                errorMessage:'',
-                errorCode:'',
                 logueado: false,
-                user: '',
             }
     }
 
@@ -31,7 +28,6 @@ componentDidMount(){
         if (user){
             this.setState({
                 logueado: true,
-                user: user
             })
         }
     })
