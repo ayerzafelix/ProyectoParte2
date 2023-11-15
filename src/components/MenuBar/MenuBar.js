@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, Image } from 'react-native'
+import { Text, StyleSheet, View, Image, ActivityIndicator } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AddPost from '../../screens/AddPost/AddPost'
@@ -20,11 +20,13 @@ class MenuBar extends Component {
         super(props);
             this.state = {
                 logueado: false,
+                loading: true
             }
     }
 
 componentDidMount(){
     auth.onAuthStateChanged(user =>{
+        this.setState({loading: false})
         if (user){
             this.setState({
                 logueado: true,
@@ -34,6 +36,10 @@ componentDidMount(){
 }
 
     render() {
+        if (this.state.loading) {
+            return (<View style={styles.loadingContainer}>
+                        <ActivityIndicator size="large" color="#0000ff" />
+                    </View>)}
         return ( 
             <NavigationContainer>
                 {this.state.logueado ?(
@@ -54,7 +60,15 @@ componentDidMount(){
     }
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    }
+
+})
 
 const screenOptions = (route, color) => {
     let iconName;
