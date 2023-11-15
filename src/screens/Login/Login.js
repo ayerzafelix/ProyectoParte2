@@ -32,7 +32,6 @@ class Login extends Component {
             <View style={styles.contenedor}>
               <Text style={styles.titulo}>Login</Text>
                 <View style={styles.formulario}>
-                  <Text style={styles.error}>{this.state.errors}</Text>
                    <TextInput
                     style={styles.lugar}
                     onChangeText={(text)=>this.setState({email: text})}
@@ -57,7 +56,10 @@ class Login extends Component {
                         </TouchableOpacity>
                 }
             </View>
-        </View>    
+            <View>
+                 <Text style={styles.error}>{this.state.errors}</Text>
+            </View> 
+        </View>   
         )
     }
 }
