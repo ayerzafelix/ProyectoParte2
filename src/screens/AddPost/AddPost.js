@@ -47,9 +47,6 @@ class AddPost extends Component {
           <View>
             <Text style={styles.title}> NEW POST </Text>
             <MyCamera onImageUpload={(url) => this.onImageUpload(url)} />
-          </View>
-        ) : (
-          <View>
             <Text style={styles.posteo}> SUBIR POSTEO </Text>
             <TextInput
               placeholder="Texto posteo"
@@ -64,6 +61,12 @@ class AddPost extends Component {
             <TouchableOpacity onPress={() => this.newPost(this.state.textoPost, this.state.foto)}>
               <Text style={styles.input}>Publicar posteo</Text>
             </TouchableOpacity>
+          </View>
+        ) : (
+          <View>
+            <Text style={styles.input}>aca deberia mostrar algo que lo lleve a que le de permisos "No diste permisos de la camara,
+            aprieta para otorgarselos y asi publicar".
+            </Text>
           </View>
         )}
       </View>

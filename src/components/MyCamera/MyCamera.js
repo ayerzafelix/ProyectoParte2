@@ -39,7 +39,7 @@ class MyCamera extends Component {
     }
 
     guardarFoto(){
-      fetch(this.state.urlTemporal) 
+      fetch(this.state.urlInternaFoto) 
       .then(res=> res.blob())
       .then(imagen => {
           const refStorage = storage.ref(`photos/${Date.now()}.jpg`);
@@ -50,7 +50,7 @@ class MyCamera extends Component {
           })
           .then(()=>{
               this.setState({
-                  showCamera:false
+                  mostrarCamara:false
           })
       })
       })
@@ -59,7 +59,7 @@ class MyCamera extends Component {
 
     cancelar(){
       this.setState({
-          urlTemporal: '',
+          urlInternaFoto: '',
           mostrarCamara:true
       }) 
   }

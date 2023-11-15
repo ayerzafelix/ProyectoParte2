@@ -71,7 +71,7 @@ class Post extends Component {
 
         <TouchableOpacity
           style={styles.text}
-          onPress={() => this.props.navigation.navigate('Perfil', { email: this.props.postData.data.owner })}
+          onPress={() => this.props.navigation.navigate('MyProfile', { email: this.props.postData.data.owner })}
         >
           <Text style={styles.text2}>Subido por {this.props.postData.data.owner}</Text>
         </TouchableOpacity>
