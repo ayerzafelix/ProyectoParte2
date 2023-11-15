@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, Image, ActivityIndicator } from 'react-native'
+import {StyleSheet, View, ActivityIndicator } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AddPost from '../../screens/AddPost/AddPost'

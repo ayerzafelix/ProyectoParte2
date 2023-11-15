@@ -90,9 +90,9 @@ class Register extends Component {
                         </TouchableOpacity>
                 }
             </View>
-            <View>
+             <View>
                  <Text style={styles.error}>{this.state.errors}</Text>
-            </View> 
+             </View> 
         </View>    
         )
     }
