@@ -10,6 +10,7 @@ class Post extends Component {
     this.state = {
       like: false,
       cantidadDeLikes: this.props.infoPost.datos.likes.length,
+    //  cantidadDeComentarios: this.props.data.comentarios.length,
     };
   }
 
@@ -68,9 +69,9 @@ class Post extends Component {
           />
           <Text style={styles.postText}>Texto: {this.props.infoPost.datos.textoPost}</Text>
           <Text style={styles.postText}>Autor: {this.props.infoPost.datos.owner}</Text>
-          <Text style={styles.likeSection}>
-            Cantidad de likes: {this.state.cantidadDeLikes}
-          </Text>
+          <Text style={styles.likeSection}>Cantidad de likes: {this.state.cantidadDeLikes} </Text>
+          <Text style={styles.postText}>Cantidad de comentarios: {this.state.cantidadDeComentarios}</Text>
+
 
           <View style={styles.actions}>
             {this.state.like ? (
@@ -97,12 +98,32 @@ class Post extends Component {
         ) : (
           <Text></Text>
         )}
+        
           </View>
+
+          
+          <View>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate(
+            'Comentario',
+            {id:this.props.id}
+            )}>
+            <Text style={styles.boton}> Comentar </Text>
+          </TouchableOpacity>
+        </View>
+
+
+        
+        <View>
+      
+        </View>
+
         </View>
       </View>
     );
   }
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -145,6 +166,17 @@ const styles = StyleSheet.create({
   },
   likeButtonText: {
     marginLeft: 5,
+  },
+
+  boton:{
+    fontFamily: 'Arial',
+    fontSize: 16,
+    margin: 10,
+    backgroundColor: 'rgb(166, 196, 237)',
+    borderRadius: 20,
+    textAlign: 'center',
+    padding: 5
+  
   },
 });
 

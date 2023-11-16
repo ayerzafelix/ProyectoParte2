@@ -10,6 +10,7 @@ import MyProfile from '../../screens/MyProfile/MyProfile';
 import { auth } from '../../firebase/config';
 import Buscador from '../../screens/Buscador/Buscador';
 import Icon  from 'react-native-vector-icons/FontAwesome';
+import Comentario from '../../screens/Comentario/Comentario';
 
 
 const Tab  = createBottomTabNavigator();
