@@ -1,136 +1,142 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { Camera } from 'expo-camera';
 import { db, storage } from '../../firebase/config';
 import { TouchableOpacity, View, Text, StyleSheet, Image } from 'react-native';
-
+import { Entypo } from '@expo/vector-icons';
 
 class MyCamera extends Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            permisos:false, //permisos de acceso al hardware para usar la cámara.
-            urlInternaFoto: '', //aca va la url temporal interna de la foto.
-            mostrarCamara: true,
+  constructor(props) {
+    super(props);
+    this.state = {
+      permisos: false,
+      urlInternaFoto: '',
+      mostrarCamara: true,
+    };
+    this.metodosDeCamara = '';
+  }
+
+  componentDidMount() {
+    Camera.requestCameraPermissionsAsync()
+      .then(() => {
+        this.setState({
+          permisos: true,
+        });
+      })
+      .catch((e) => console.log(e));
+  }
+
+  SacarFoto() {
+    console.log('sacando foto...');
+    this.metodosDeCamara.takePictureAsync()
+      .then((foto) => {
+        this.setState({
+          urlInternaFoto: foto.uri,
+          mostrarCamara: false,
+        });
+      })
+      .catch(e => console.log(e));
+  }
+  guardarFoto() {
+    fetch(this.state.urlInternaFoto)
+      .then(res => res.blob())
+      .then(image => {
+        const ruta = storage.ref(`photos/${Date.now()}.jpg`);
+        ruta.put(image)
+          .then(() => {
+            ruta.getDownloadURL()
+              .then(url => {
+                this.props.urlDeFoto(url);
+                this.setState({
+                  urlInternaFoto: '',
+                  mostrarCamara: true,
+                });
+              });
+          });
+      })
+      .catch(e => console.log(e));
+  }
+  cancelar() {
+    console.log("Cancelando...");
+    this.setState({
+      urlInternaFoto: '',
+      mostrarCamara: true,
+    });
+  }
+
+  render() {
+    return (
+      <View style = { styles.container}>
+
+      {this.state.permisos ?
+        this.state.mostrarCamara === false ?
+        <React.Fragment>
+              <Image
+                style = { styles.cameraBody }
+                source={{ uri: this.state.urlInternaFoto }}
+              />
+              <View style={styles.confirm}>
+                <TouchableOpacity style={styles.cancelButton} onPress={() => this.cancelar()}>
+                  <Text style={styles.textButton}>Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.confirmButton} onPress={() => this.guardarFoto()}>
+                  <Text style={styles.textButton}>Aceptar</Text>
+                </TouchableOpacity>
+              </View>
+            </React.Fragment>
+        :
+        <React.Fragment>
+        <Camera
+          type={Camera.Constants.Type.front}
+          ref={metodosDeCamara => this.metodosDeCamara = metodosDeCamara}
+          style = { styles.cameraBody }
+          
+        />
+        <TouchableOpacity style={styles.button} onPress={() => this.SacarFoto()}>
+          <Entypo name="circular-graph" size={24} color="gray" />
+        </TouchableOpacity>
+      </React.Fragment>   
+      :
+          <Text>La cámara no tiene permisos</Text>
         }
-        this.metodosDeCamara = '' //referenciar a los métodos internos del componente camera.
-    }
-
-    componentDidMount(){
-       //Pedir permisos para uso del hardware.
-       Camera.requestCameraPermissionsAsync()
-            .then( () => {
-                this.setState({
-                    permisos: true
-                })
-            } )
-            .catch( e => console.log(e)) 
-    }
-
-    SacarFoto(){
-        console.log('sacando foto...');
-        this.metodosDeCamara.takePictureAsync()
-            .then( photo => {
-                this.setState({
-                    urlInternaFoto: photo.uri, //La ruta interna de la foto en la computadora.
-                    mostrarCamara: false //escondemos la cámara para mostrar un preview de la foto al usuario.
-                })
-            })
-            .catch(e=>console.log(e))
-    }
-
-    guardarFoto(){
-      fetch(this.state.urlInternaFoto) 
-      .then(res=> res.blob())
-      .then(imagen => {
-          const refStorage = storage.ref(`photos/${Date.now()}.jpg`);
-          refStorage.put(imagen)
-          .then(()=>{
-              refStorage.getDownloadURL()
-              .then(url => this.props.onImageUpload(url))
-          })
-          .then(()=>{
-              this.setState({
-                  mostrarCamara:false
-          })
-      })
-      })
-      .catch(e=> console.log(e))
+      </View>
+    );
   }
-
-    cancelar(){
-      this.setState({
-          urlInternaFoto: '',
-          mostrarCamara:true
-      }) 
-  }
-    render(){
-        return(
-            <View style={ styles.container}>
-
-                {
-                    this.state.permisos ?
-                        this.state.mostrarCamara === false ?
-                        //Preview
-                        <React.Fragment>
-                            <Image 
-                                source={{uri:this.state.urlInternaFoto}}
-                                style={ styles.cameraBody }
-                            />
-                            {/* Corregir estilos para que se vea la imagen */}
-                            {/* Corregir estilos para que los botones desaparezcan una vez que el usuario aceptó o canceló el preview */}
-                            <TouchableOpacity style = { styles.button } onPress={ () => this.guardarFoto() }>
-                                <Text>Aceptar</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style = { styles.button } onPress={ () => this.cancelar() }>
-                                <Text>Cancelar</Text>
-                            </TouchableOpacity>
-                        </React.Fragment>
-                        
-                        :
-                        //Cámara.
-                        <React.Fragment>
-                        {/* Corregir estilos para que se vea bien la cámara */}
-                            <Camera 
-                                type={Camera.Constants.Type.front}
-                                ref= { metodosDeCamara => this.metodosDeCamara = metodosDeCamara}
-                                style = { styles.cameraBody }
-                            />
-                            <TouchableOpacity  style = { styles.button } onPress={()=> this.SacarFoto()}>
-                                <Text>Sacar Foto</Text>
-                            </TouchableOpacity>
-                        </React.Fragment>
-                    :
-                    <Text>La cámara no tiene permisos</Text>
-
-                }
-            </View>
-        )
-    }
-
-
 }
 
 const styles = StyleSheet.create({
-  container: {
-    
-    height: 600,
-  },
+  container:{
+    height:"45vh",
+    alignItems: 'center'    
+},
   cameraBody: {
     height: '50vh',
-        width: '100vw',
-        position: 'absolute',
-        marginTop:50
-  },
-  button: {
+    width: '100vw',
     position: 'absolute',
-    bottom: 16,
-    left: '50%',
-    transform: [{ translateX: -50 }],
-    backgroundColor: '#fff',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-  },
+    marginTop:50
+},
+confirm: {
+  flexDirection: 'row',
+  justifyContent: 'space-around',
+  marginTop: 20,
+},
+cancelButton: {
+  backgroundColor: 'red',
+  padding: 10,
+  borderRadius: 5,
+},
+confirmButton: {
+  backgroundColor: 'green',
+  padding: 10,
+  borderRadius: 5,
+},
+textButton: {
+  color: 'white',
+},
+button: {
+  alignSelf: 'center',
+  position: 'absolute',
+  bottom: 20,
+},
 });
 
-export default MyCamera
+export default MyCamera;
