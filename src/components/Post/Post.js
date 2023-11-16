@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Image, FlatList } from 'react-native';
-import { auth, db } from '../../firebase/config';
+import { Image, TouchableOpacity, View, Text, StyleSheet } from 'react-native';
+import { db, auth } from '../../firebase/config';
 import firebase from 'firebase';
 import { FontAwesome } from '@expo/vector-icons';
 
@@ -8,125 +8,97 @@ class Post extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cantidadLikes: this.props.postData.data.likes.length,
-      miLike: false,
-      comentario: this.props.postData.data.comentario.sort((a, b) => b.createdAt - a.createdAt),
+      like: false,
+      cantidadDeLikes: this.props.infoPost.datos.likes.length,
     };
   }
 
   componentDidMount() {
-    if (this.props.postData.data.likes.includes(auth.currentUser.email)) {
+    // Indicar si el post ya está likeado o no.
+    if (this.props.infoPost.datos.likes.includes(auth.currentUser.email)) {
       this.setState({
-        miLike: true,
+        like: true,
       });
     }
   }
 
   like() {
     db.collection('posts')
-      .doc(this.props.postData.id)
+      .doc(this.props.infoPost.id)
       .update({
         likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email),
       })
-      .then(() =>
+      .then((res) => {
         this.setState({
-          cantidadLikes: this.state.cantidadLikes + 1,
-          miLike: true,
-        })
-      )
+          like: true,
+          cantidadDeLikes: this.props.infoPost.datos.likes.length,
+        });
+      })
       .catch((e) => console.log(e));
   }
 
-  disLike() {
+  unLike() {
     db.collection('posts')
-      .doc(this.props.postData.id)
+      .doc(this.props.infoPost.id)
       .update({
         likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email),
       })
-      .then(() =>
+      .then((res) => {
         this.setState({
-          cantidadLikes: this.state.cantidadLikes - 1,
-          miLike: false,
-        })
-      )
+          like: false,
+          cantidadDeLikes: this.props.infoPost.datos.likes.length,
+        });
+      })
       .catch((e) => console.log(e));
   }
 
   borrarPost() {
-    db.collection('posts').doc(this.props.postData.id).delete();
-  }
-
-  setComment(comment) {
-    const newCommentsArr = this.state.comentario.concat([comment]);
-    const sortedArr = newCommentsArr.sort((a, b) => b.createdAt - a.createdAt);
-    this.setState({
-      comentario: sortedArr,
-    });
+    db.collection('posts').doc(this.props.infoPost.id).delete();
   }
 
   render() {
+    console.log(this.props);
     return (
       <View style={styles.container}>
-        <Image style={styles.foto} source={{ uri: this.props.postData.data.foto }} resizeMode="cover" />
+        <View style={styles.box}>
+          <Image
+            source={{ uri: this.props.infoPost.datos.fotoUrl }}
+            resizeMode="cover"
+            style={styles.postImg}
+          />
+          <Text style={styles.postText}>Texto: {this.props.infoPost.datos.textoPost}</Text>
+          <Text style={styles.postText}>Autor: {this.props.infoPost.datos.owner}</Text>
+          <Text style={styles.likeSection}>
+            Cantidad de likes: {this.state.cantidadDeLikes}
+          </Text>
 
-        <TouchableOpacity
-          style={styles.text}
-          onPress={() => this.props.navigation.navigate('MyProfile', { email: this.props.postData.data.owner })}
-        >
-          <Text style={styles.text2}>Subido por {this.props.postData.data.owner}</Text>
-        </TouchableOpacity>
-
-        <Text style={styles.text}>{this.props.postData.data.textoPost}</Text>
-
-        <View style={styles.iconContainer}>
-          {this.state.miLike ? (
-            <TouchableOpacity style={styles.icon} onPress={() => this.disLike()}>
-              <FontAwesome name="heart" color="#4CAF50" size={28} />
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity style={styles.icon} onPress={() => this.like()}>
-              <FontAwesome name="heart-o" color="#4CAF50" size={28} />
-            </TouchableOpacity>
-          )}
-
-          <TouchableOpacity
-            style={styles.icon}
-            onPress={() =>
-              this.props.navigation.navigate('Comments', {
-                id: this.props.postData.id,
-                agregarComment: (comment) => this.setComment(comment),
-              })
-            }
-          >
-            <FontAwesome name="comment-o" color="#4CAF50" size={28} />
-          </TouchableOpacity>
-        </View>
-
-        <Text style={styles.textLike}>{this.state.cantidadLikes} likes</Text>
-
-        {this.state.comentario.length === 1 ? (
-          <Text style={styles.textComent3}>{this.state.comentario.length} comentario</Text>
-        ) : (
-          <Text style={styles.textComent3}>{this.state.comentario.length} comentarios</Text>
-        )}
-
-        <FlatList
-          data={this.state.comentario.slice(0, 4)}
-          keyExtractor={(oneComent) => oneComent.createdAt.toString()}
-          renderItem={({ item }) => (
-            <Text style={styles.textComent}>
-              {item.owner} comentó: <Text style={styles.textComent2}> {item.comentario} </Text>
-            </Text>
-          )}
-        />
-
-        {this.props.postData.data.owner === auth.currentUser.email ? (
+          <View style={styles.actions}>
+            {this.state.like ? (
+              <TouchableOpacity
+                style={styles.likeButton}
+                onPress={() => this.unLike()}
+              >
+                <FontAwesome name="heart" color="red" size={28} />
+                <Text style={styles.likeButtonText}>Me gusta</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={styles.likeButton}
+                onPress={() => this.like()}
+              >
+                <FontAwesome name="heart" color="black" size={28} />
+                <Text style={styles.likeButtonText}>No me gusta</Text>
+              </TouchableOpacity>
+            )}
+            {this.props.infoPost.datos.owner === auth.currentUser.email ? (
           <TouchableOpacity style={styles.text} onPress={() => this.borrarPost()}>
-            <Text style={styles.borrar}> Borrar este posteo</Text>
+            <FontAwesome name="trash-o" size={24} color="black" />
           </TouchableOpacity>
         ) : (
           <Text></Text>
         )}
+          </View>
+        </View>
       </View>
     );
   }
@@ -135,60 +107,46 @@ class Post extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 16,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  foto: {
+  box: {
+    width: '100%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    elevation: 5,
+    marginBottom: 20,
+  },
+  postImg: {
     width: '100%',
     height: 200,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
-  text: {
-    margin: 8,
+  postText: {
+    fontSize: 16,
+    margin: 10,
   },
-  text2: {
-    fontWeight: 'bold',
+  likeSection: {
+    fontSize: 16,
+    marginHorizontal: 10,
+    marginBottom: 20,
   },
-  iconContainer: {
+  actions: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 16,
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
+    marginBottom: 10,
   },
-  icon: {
-    padding: 8,
+  likeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  textLike: {
-    marginLeft: 16,
-    marginBottom: 8,
-    fontWeight: 'bold',
-  },
-  textComent3: {
-    marginLeft: 16,
-    marginBottom: 4,
-    color: '#555',
-  },
-  textComent: {
-    marginLeft: 16,
-    marginBottom: 4,
-  },
-  textComent2: {
-    fontWeight: 'bold',
-  },
-  borrar: {
-    color: 'red',
-    fontWeight: 'bold',
+  likeButtonText: {
+    marginLeft: 5,
   },
 });
 
 export default Post;
+
