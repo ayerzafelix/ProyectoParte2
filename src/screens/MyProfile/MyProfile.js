@@ -13,7 +13,7 @@ import Post from '../../components/Post/Post'
     }
     componentDidMount(){
         if (auth.currentUser) {
-            db.collection('posts')
+            /*db.collection('posts')
             .where('owner','==', auth.currentUser.email)
             .onSnapshot((docs) => {
                 let posteos = []
@@ -26,7 +26,7 @@ import Post from '../../components/Post/Post'
                 this.setState({
                     posts: posteos,
                 })
-            })
+            })*/
             db.collection('users')
             .where('owner','==', auth.currentUser.email)
             .onSnapshot((docs) => {
@@ -46,7 +46,7 @@ import Post from '../../components/Post/Post'
 
     signOut() {
         auth.signOut()
-        this.props.navigation.navigate('MenuBar')
+        this.props.navigation.navigate('Login')
       }
 
     render() {
