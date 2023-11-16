@@ -30,6 +30,7 @@ componentDidMount(){
         if (user){
             this.setState({
                 logueado: true,
+                
             })
         }
     })
@@ -40,6 +41,7 @@ componentDidMount(){
             return (<View style={styles.loadingContainer}>
                         <ActivityIndicator size="large" color="#0000ff" />
                     </View>)}
+                     console.log(auth.currentUser)
         return ( 
             <NavigationContainer>
                 {this.state.logueado ?(

@@ -24,6 +24,9 @@ class Register extends Component {
                     biografia: biografia,
                     createdAt: Date.now(),
                   })
+                  auth.currentUser.updateProfile({
+                    displayName: userName
+                   })
                   .then(() => {
                     this.setState({
                       email: '',
