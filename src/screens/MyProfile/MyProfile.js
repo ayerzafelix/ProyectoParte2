@@ -21,18 +21,18 @@ class MyProfile extends Component {
     const currentUser = auth.currentUser;
 
     currentUser & db.collection('users')
-    .where('owner', '==', currentUser.email)
-    .onSnapshot((docs) => {
+      .where('owner', '==', currentUser.email)
+      .onSnapshot((docs) => {
 
         let user = []
         docs.forEach(doc => {
-            user.push({
-                id: doc.id,
-                data: doc.data()
-            })
+          user.push({
+            id: doc.id,
+            data: doc.data()
+          })
         })
         this.setState({ user: user[0] });
-    });
+      });
   }
 
   fetchUserPosts() {
@@ -103,10 +103,10 @@ class MyProfile extends Component {
         <Text style={styles.textTotalPosts}>Total Posts: {posts.length}</Text>
 
         <FlatList
-        style={styles.posts}
-        data={posts}
-        keyExtractor={(post) => post.id.toString()}
-        renderItem={({ item }) => {return <Post infoPost={item} navigation={this.props.navigation} />;}}
+          style={styles.posts}
+          data={posts}
+          keyExtractor={(post) => post.id.toString()}
+          renderItem={({ item }) => { return <Post infoPost={item} navigation={this.props.navigation} />; }}
         />
 
         <TouchableOpacity style={styles.logoutButton} onPress={() => this.signOut()}>

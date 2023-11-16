@@ -11,7 +11,7 @@ class AddPost extends Component {
       textoPost: '',
       fotoUrl: '',
       createdAt: '',
-      
+
     };
   }
 
@@ -41,32 +41,32 @@ class AddPost extends Component {
   render() {
     return (
       <View style={styles.container}>
-          <View style={styles.cameraContainer}>
-            <Text style={styles.headerText}>New Post</Text>
-            <MyCamera style={styles.camera} urlDeFoto={(url) => this.urlDeFoto(url)} />
-          </View>
-          <View style={styles.form}>
-            <TextInput
-              style={styles.input}
-              onChangeText={(text) => this.setState({ textoPost: text })}
-              placeholder="Write something..."
-              keyboardType="default"
-              value={this.state.textoPost}
-            />
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() =>
-                this.addPost(
-                  auth.currentUser.email,
-                  this.state.textoPost,
-                  this.state.fotoUrl,
-                  Date.now()
-                )
-              }
-            >
-              <Text style={styles.textButton}>Post</Text>
-            </TouchableOpacity>
-          </View>
+        <View style={styles.cameraContainer}>
+          <Text style={styles.headerText}>New Post</Text>
+          <MyCamera style={styles.camera} urlDeFoto={(url) => this.urlDeFoto(url)} />
+        </View>
+        <View style={styles.form}>
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => this.setState({ textoPost: text })}
+            placeholder="Write something..."
+            keyboardType="default"
+            value={this.state.textoPost}
+          />
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() =>
+              this.addPost(
+                auth.currentUser.email,
+                this.state.textoPost,
+                this.state.fotoUrl,
+                Date.now()
+              )
+            }
+          >
+            <Text style={styles.textButton}>Post</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }

@@ -10,7 +10,7 @@ class Post extends Component {
     this.state = {
       like: false,
       cantidadDeLikes: this.props.infoPost.datos.likes.length,
-    //  cantidadDeComentarios: this.props.data.comentarios.length,
+      
     };
   }
 

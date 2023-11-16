@@ -65,13 +65,13 @@ class MyCamera extends Component {
 
   render() {
     return (
-      <View style = { styles.container}>
+      <View style={styles.container}>
 
-      {this.state.permisos ?
-        this.state.mostrarCamara === false ?
-        <React.Fragment>
+        {this.state.permisos ?
+          this.state.mostrarCamara === false ?
+            <React.Fragment>
               <Image
-                style = { styles.cameraBody }
+                style={styles.cameraBody}
                 source={{ uri: this.state.urlInternaFoto }}
               />
               <View style={styles.confirm}>
@@ -83,19 +83,19 @@ class MyCamera extends Component {
                 </TouchableOpacity>
               </View>
             </React.Fragment>
-        :
-        <React.Fragment>
-        <Camera
-          type={Camera.Constants.Type.front}
-          ref={metodosDeCamara => this.metodosDeCamara = metodosDeCamara}
-          style = { styles.cameraBody }
-          
-        />
-        <TouchableOpacity style={styles.button} onPress={() => this.SacarFoto()}>
-          <Entypo name="circular-graph" size={24} color="gray" />
-        </TouchableOpacity>
-      </React.Fragment>   
-      :
+            :
+            <React.Fragment>
+              <Camera
+                type={Camera.Constants.Type.front}
+                ref={metodosDeCamara => this.metodosDeCamara = metodosDeCamara}
+                style={styles.cameraBody}
+
+              />
+              <TouchableOpacity style={styles.button} onPress={() => this.SacarFoto()}>
+                <Entypo name="circular-graph" size={24} color="gray" />
+              </TouchableOpacity>
+            </React.Fragment>
+          :
           <Text>La cámara no tiene permisos</Text>
         }
       </View>
@@ -104,39 +104,39 @@ class MyCamera extends Component {
 }
 
 const styles = StyleSheet.create({
-  container:{
-    height:"45vh",
-    alignItems: 'center'    
-},
+  container: {
+    height: "45vh",
+    alignItems: 'center'
+  },
   cameraBody: {
     height: '50vh',
     width: '100vw',
     position: 'absolute',
-    marginTop:50
-},
-confirm: {
-  flexDirection: 'row',
-  justifyContent: 'space-around',
-  marginTop: 20,
-},
-cancelButton: {
-  backgroundColor: 'red',
-  padding: 10,
-  borderRadius: 5,
-},
-confirmButton: {
-  backgroundColor: 'green',
-  padding: 10,
-  borderRadius: 5,
-},
-textButton: {
-  color: 'white',
-},
-button: {
-  alignSelf: 'center',
-  position: 'absolute',
-  bottom: 20,
-},
+    marginTop: 50
+  },
+  confirm: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 20,
+  },
+  cancelButton: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+  },
+  confirmButton: {
+    backgroundColor: 'green',
+    padding: 10,
+    borderRadius: 5,
+  },
+  textButton: {
+    color: 'white',
+  },
+  button: {
+    alignSelf: 'center',
+    position: 'absolute',
+    bottom: 20,
+  },
 });
 
 export default MyCamera;
