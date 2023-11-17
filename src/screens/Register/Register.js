@@ -58,21 +58,21 @@ class Register extends Component {
           <TextInput
             style={styles.lugar}
             onChangeText={(text) => this.setState({ email: text })}
-            placeholder='email'
+            placeholder='email *'
             keyboardType='email-address'
             value={this.state.email}
           />
           <TextInput
             style={styles.lugar}
             onChangeText={(text) => this.setState({ userName: text })}
-            placeholder='user name'
+            placeholder='user name *'
             keyboardType='default'
             value={this.state.userName}
           />
           <TextInput
             style={styles.lugar}
             onChangeText={(text) => this.setState({ password: text })}
-            placeholder='password'
+            placeholder='password *'
             keyboardType='default'
             secureTextEntry={true}
             value={this.state.password}
@@ -85,6 +85,8 @@ class Register extends Component {
             value={this.state.biografia}
           />
 
+          <Text style={styles.elAsterisco}> Los campos que contienen "*" son obligatorios</Text>
+
           {this.state.email === "" || this.state.password === "" || this.state.userName === "" ?
             <Text style={styles.button}>Done</Text>
             :
@@ -93,6 +95,7 @@ class Register extends Component {
             </TouchableOpacity>
           }
         </View>
+                    <Text>¿Ya tienes una cuenta? Haz click en login en la parte inferior de la pantala. </Text>
         <View>
           <Text style={styles.error}>{this.state.errors}</Text>
         </View>
@@ -173,7 +176,13 @@ const styles = StyleSheet.create({
 
   error: {
     color: "red",
+  },
+
+  elAsterisco:{
+    color:"rgb(89, 1, 1)",
+
   }
 })
+
 
 export default Register;
