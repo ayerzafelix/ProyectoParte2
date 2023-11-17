@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, TouchableOpacity, View, Modal, Text, StyleSheet, TextInput } from 'react-native';
+import { Image, TouchableOpacity, View, Modal, Text, StyleSheet, TextInput, FlatList } from 'react-native';
 import { db, auth } from '../../firebase/config';
 import firebase from 'firebase';
 import { FontAwesome } from '@expo/vector-icons';
@@ -85,7 +85,7 @@ guardarComentario(){
       autor: auth.currentUser.displayName,
       comentarios: this.state.comentarios
   }
-  db.collection('posteos').doc(this.props.infoPost.id).update({
+  db.collection('posts').doc(this.props.infoPost.id).update({
       comentarios: firebase.firestore.FieldValue.arrayUnion(unComentario)
   })
   .then(()=>{
