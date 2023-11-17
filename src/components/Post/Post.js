@@ -4,12 +4,15 @@ import { db, auth } from '../../firebase/config';
 import firebase from 'firebase';
 import { FontAwesome } from '@expo/vector-icons';
 
+
 class Post extends Component {
   constructor(props) {
     super(props);
+    console.log(this.props)
     this.state = {
       like: false,
       cantidadDeLikes: this.props.infoPost.datos.likes.length,
+
       
     };
   }
@@ -58,7 +61,6 @@ class Post extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <View style={styles.container}>
         <View style={styles.box}>
@@ -70,7 +72,7 @@ class Post extends Component {
           <Text style={styles.postText}>Texto: {this.props.infoPost.datos.textoPost}</Text>
           <Text style={styles.postText}>Autor: {this.props.infoPost.datos.owner}</Text>
           <Text style={styles.likeSection}>Cantidad de likes: {this.state.cantidadDeLikes} </Text>
-          <Text style={styles.postText}>Cantidad de comentarios: {this.state.cantidadDeComentarios}</Text>
+          <Text style={styles.postText}>Cantidad de comentarios: falta ponerlo {this.state.cantidadDeComentarios}</Text>
 
 
           <View style={styles.actions}>
@@ -100,24 +102,13 @@ class Post extends Component {
         )}
         
           </View>
-
-          
-          <View>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate(
-            'Comentario',
-            {id:this.props.id}
-            )}>
-            <Text style={styles.boton}> Comentar </Text>
+|       
+          <TouchableOpacity style={styles.boton} onPress={() => this.props.navigation.navigate(
+          'Comentario', { id: this.props.dataPost.id })}> <Text style={styles.boton}> Comentar </Text>
           </TouchableOpacity>
         </View>
 
 
-        
-        <View>
-      
-        </View>
-
-        </View>
       </View>
     );
   }

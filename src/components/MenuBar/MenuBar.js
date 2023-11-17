@@ -52,6 +52,7 @@ class MenuBar extends Component {
                         <Tab.Screen options={{ headerShown: false }} name="Buscador" component={() => <Buscador />} />
                         <Tab.Screen options={{ headerShown: false, lazy: true }} name="AddPost" component={(drawerProps) => <AddPost drawerProps={drawerProps} />} />
                         <Tab.Screen options={{ headerShown: false }} name="MyProfile" component={() => <MyProfile logout={() => this.logout()} />} />
+                        
                     </Tab.Navigator>)
                     :
                     (<Tab.Navigator screenOptions={({ route }) => ({ tabBarIcon: ({ color }) => screenOptions(route, color) })}>

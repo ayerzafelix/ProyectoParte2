@@ -14,43 +14,23 @@ class Comentario extends Component {
   }
 
   componentDidMount() {
-    db.collection('post')
+    db.collection('posts')
       .doc(this.props.route.params.id)
-      .onSnapshot((doc) => {
-        if (doc.exists) {
-          this.setState({
-            id: doc.id,
-            data: doc.data(),
-          });
-        } else {
-          console.error('Documento no encontrado');
-        }
-      });
+      .onSnapshot(doc=>{
+        this.setState({id:doc.id,data:doc.data()})
+    })
   }
 
-  agregarComenrtario(idDoc, text) {
+  agregarComenrtario(id, comentario) {
     db.collection('posts')
-      .doc(idDoc)
+      .doc(id)
       .update({
         commentarios: firebase.firestore.FieldValue.arrayUnion({
           owner: auth.currentUser.email,
           createdAt: Date.now(),
-          comentario: this.state.elComentario,
+          comentario: this.state.comentario,
         }),
       })
-      .then(() => {
-        this.props.route.params.agregarComment({
-          owner: auth.currentUser.email,
-          createdAt: Date.now(),
-          comentario: this.state.elComentario,
-        });
-        this.setState({
-          elComentario: '',
-        });
-      })
-      .catch((error) => {
-        console.error('Error al agregar comentario:', error);
-      });
   }
 
   render() {
@@ -61,18 +41,18 @@ class Comentario extends Component {
             <Text>No hay comentarios aún</Text>
           </View>
         ) : (
-          <View style={styles.texto}>
-            <FlatList
-              data={this.state.data.commentarios || []}
-              keyExtractor={(item) => item.createdAt.toString()}
-              renderItem={({ item }) => (
-                <View>
-                  <Text style={styles.textox}>{item.owner} comentó:</Text>
-                  <Text style={styles.textox}>{item.comentario}</Text>
-                </View>
-              )}
-            />
-          </View>
+          <View>
+                <FlatList
+                  data={this.state.data.comentarios}
+                  keyExtractor={item => item.createdAt.toString()}
+                  renderItem={({ item }) => (
+                    <View style={styles.commentContainer}>
+                      <Text style={styles.ownerText}>{item.owner}:</Text>
+                      <Text style={styles.commentText}>{item.comentario}</Text>
+                    </View>
+                  )}
+                />
+              </View>
         )}
 
         <View style={styles.boton}>
