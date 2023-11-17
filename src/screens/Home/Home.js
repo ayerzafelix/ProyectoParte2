@@ -12,7 +12,6 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        // Traer datos
         db.collection('posts').onSnapshot((posteos) => {
             let postsAMostrar = [];
 
@@ -22,16 +21,10 @@ class Home extends Component {
                     datos: unPost.data(),
                 });
             });
-
             this.setState({
                 listaPost: postsAMostrar,
             });
         });
-    }
-
-    logout() {
-        auth.signOut();
-        this.props.navigation.navigate('Login')
     }
 
     render() {
@@ -40,11 +33,7 @@ class Home extends Component {
             <View style={styles.container}>
                 <View style={styles.header}>
                     <Text style={styles.headerText}>HOME</Text>
-                    <TouchableOpacity onPress={() => this.logout()}>
-                        <Text style={styles.logoutText}>Logout</Text>
-                    </TouchableOpacity>
                 </View>
-
                 <Text style={styles.postListTitle}>Lista de Posts</Text>
                 {this.state.listaPost.length === 0 ? (
                     <Text style={styles.loadingText}>Cargando...</Text>
@@ -52,7 +41,7 @@ class Home extends Component {
                     <FlatList
                         data={this.state.listaPost}
                         keyExtractor={(unPost) => unPost.id.toString()}
-                        renderItem={({ item }) => <Post infoPost={item} navigation={this.props.navigation} />}                    />
+                        renderItem={({ item }) => <Post infoPost={item} navigation={this.props.navigation} />}/>
                 )}
             </View>
         );

@@ -17,8 +17,7 @@ class AddPost extends Component {
 
   addPost(owner, textoPost, fotoUrl, createdAt) {
     // Crear la colección Users
-    db.collection('posts')
-      .add({
+    db.collection('posts').add({
         owner: auth.currentUser.email,
         textoPost: this.state.textoPost,
         fotoUrl: fotoUrl,

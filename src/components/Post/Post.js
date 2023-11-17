@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Image, TouchableOpacity, View, Text, StyleSheet } from 'react-native';
+import { Image, TouchableOpacity, View, Modal, Text, StyleSheet, TextInput } from 'react-native';
 import { db, auth } from '../../firebase/config';
 import firebase from 'firebase';
 import { FontAwesome } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 class Post extends Component {
@@ -12,19 +13,28 @@ class Post extends Component {
     this.state = {
       like: false,
       cantidadDeLikes: this.props.infoPost.datos.likes.length,
-
-      
-    };
+      mostrarModal: false,
+      comentarios: '',
+      listaComentarios: null,
+      cantidadComentarios: 0 
+    }
   }
 
   componentDidMount() {
-    // Indicar si el post ya está likeado o no.
+
     if (this.props.infoPost.datos.likes.includes(auth.currentUser.email)) {
       this.setState({
         like: true,
-      });
+      })
     }
+
+    if(this.props.infoPost.datos.comentarios){
+      this.setState({
+          listaComentarios:this.props.infoPost.datos.comentarios,
+          cantidadComentarios: this.props.infoPost.datos.comentarios.length
+      })
   }
+}
 
   like() {
     db.collection('posts')
@@ -56,6 +66,38 @@ class Post extends Component {
       .catch((e) => console.log(e));
   }
 
+  abrirModal() {
+    this.setState({
+        mostrarModal: true,
+    })
+}
+
+  cerrarModal() {
+    this.setState({
+        mostrarModal: false,
+    })
+}
+
+guardarComentario(){
+  console.log ('Guardado comentario')
+  let unComentario ={
+      createdAt: Date.now (),
+      autor: auth.currentUser.displayName,
+      comentarios: this.state.comentarios
+  }
+  db.collection('posteos').doc(this.props.infoPost.id).update({
+      comentarios: firebase.firestore.FieldValue.arrayUnion(unComentario)
+  })
+  .then(()=>{
+      this.setState({
+          comentarios: '',
+          listaComentarios: this.props.infoPost.datos.comentarios,
+          cantidadComentarios: this.props.infoPost.datos.comentarios.length
+
+      })
+  })
+}
+
   borrarPost() {
     db.collection('posts').doc(this.props.infoPost.id).delete();
   }
@@ -71,45 +113,94 @@ class Post extends Component {
           />
           <Text style={styles.postText}>Texto: {this.props.infoPost.datos.textoPost}</Text>
           <Text style={styles.postText}>Autor: {this.props.infoPost.datos.owner}</Text>
-          <Text style={styles.likeSection}>Cantidad de likes: {this.state.cantidadDeLikes} </Text>
-          <Text style={styles.postText}>Cantidad de comentarios: falta ponerlo {this.state.cantidadDeComentarios}</Text>
+          <Text style={styles.likeSection}>Cantidad de likes: {this.state.cantidadDeLikes}</Text>
 
+          <TouchableOpacity onPress={() => this.abrirModal()}>
+                    <Text style={styles.meGusta}> {this.state.cantidadComentarios} Comentarios</Text>
+          </TouchableOpacity>
 
           <View style={styles.actions}>
+
             {this.state.like ? (
-              <TouchableOpacity
-                style={styles.likeButton}
-                onPress={() => this.unLike()}
-              >
+              <TouchableOpacity style={styles.likeButton} onPress={() => this.unLike()}>
                 <FontAwesome name="heart" color="red" size={28} />
                 <Text style={styles.likeButtonText}>Me gusta</Text>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity
-                style={styles.likeButton}
-                onPress={() => this.like()}
-              >
+              <TouchableOpacity style={styles.likeButton}onPress={() => this.like()}>
                 <FontAwesome name="heart" color="black" size={28} />
                 <Text style={styles.likeButtonText}>No me gusta</Text>
               </TouchableOpacity>
             )}
+
             {this.props.infoPost.datos.owner === auth.currentUser.email ? (
-          <TouchableOpacity style={styles.text} onPress={() => this.borrarPost()}>
-            <FontAwesome name="trash-o" size={24} color="black" />
-          </TouchableOpacity>
-        ) : (
-          <Text></Text>
-        )}
+             <TouchableOpacity style={styles.text} onPress={() => this.borrarPost()}>
+              <FontAwesome name="trash-o" size={24} color="black" />
+             </TouchableOpacity>
+             ) : (
+              <Text></Text>
+            )}
+
+            <TouchableOpacity style={styles.comentario} onPress={()=>this.abrirModal()}>
+                <Text>
+                    <Icon name="comments" size={30} color="#2099D8" />
+                </Text>
+            </TouchableOpacity>
         
           </View>
 |       
-          <TouchableOpacity style={styles.boton} onPress={() => this.props.navigation.navigate(
-          'Comentario', { id: this.props.dataPost.id })}> <Text style={styles.boton}> Comentar </Text>
-          </TouchableOpacity>
         </View>
 
+        { ! this.state.mostrarModal ?
+                       null
+                        :
+                        <Modal
+                                style={styles.modalContainer}
+                                visible={this.state.mostrarModal}
+                                animationType="slide"
+                                transparent={false}
+                                >
 
-      </View>
+                                    <TouchableOpacity onPress= {() => this.cerrarModal()} style={styles.closeModal}>
+                                        <Text>X</Text>
+                                    </TouchableOpacity>
+                                    
+                                
+                                    {
+                                this.state.listaComentarios ?
+                                
+                                <FlatList
+                                data={this.state.listaComentarios}
+                                keyExtractor={(comentarios) => comentarios.createdAt.toString ()}
+                                renderItem={ ({item})=> <Text> {item.autor}: {item.comentarios}</Text> }
+                                /> :
+                                <Text>Todavía no hay comentarios</Text>
+                            }
+
+
+
+                        <View>
+                        <TextInput 
+                            style={styles.textButton}
+                            placeholder="Comentar"
+                            keyboardType="default"
+                            multiline
+                            value={this.state.comentarios}
+                            onChangeText={texto => this.setState({comentarios: texto})}
+                            
+                        />
+                        <TouchableOpacity 
+                            style={styles.button}
+                            onPress={()=>{this.guardarComentario()}} 
+                            disabled={this.state.comentarios == '' ? true:false}>
+                            <Text style={styles.textButton}>Guadar comentario</Text>
+                        </TouchableOpacity>
+                        </View>
+                        </Modal>
+                           
+                }
+                
+            </View>
     );
   }
 }
@@ -169,6 +260,44 @@ const styles = StyleSheet.create({
     padding: 5
   
   },
+
+  modalContainer: {
+    width:'100%',  
+    flex: 3,
+    alignSelf: 'center',
+    backgroundColor: "white",
+    borderColor: '#000000',
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: '#000000',
+},
+textButton: {
+  color: "black",
+},
+closeModal:{
+  alignSelf: 'flex-end',
+  padding: 10,
+  backgroundColor: '#dc3545',
+  marginTop:2,
+  borderRadius: 10,
+},
+comentario: {
+  backgroundColor: "#fde79e",
+  backgroundColor: "#",
+  paddingHorizontal: 10,
+  paddingVertical: 6,
+  textAlign: "center",
+  borderRadius: 10,
+  borderWidth: 1,
+  borderStyle: "solid",
+  backgroundColor: "#F1F1F1",
+  borderColor: "#F1F1F1",
+  
+},
+meGusta: {
+  textAlign: "left",
+  marginVertical: 10
+},
 });
 
 export default Post;
