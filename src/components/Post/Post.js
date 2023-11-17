@@ -102,6 +102,13 @@ guardarComentario(){
     db.collection('posts').doc(this.props.infoPost.id).delete();
   }
 
+
+  comentario(){
+    
+  }
+
+
+
   render() {
     return (
       <View style={styles.container}>

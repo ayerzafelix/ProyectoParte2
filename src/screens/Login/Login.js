@@ -57,6 +57,9 @@ class Login extends Component {
                         </TouchableOpacity>
                     }
                 </View>
+
+                <Text> ¿Aun no tienes cuenta? Haz click en Register en la parte inferior de la pantala. </Text>
+
                 <View>
                     <Text style={styles.error}>{this.state.errors}</Text>
                 </View>
