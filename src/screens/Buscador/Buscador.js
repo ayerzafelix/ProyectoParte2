@@ -1,96 +1,151 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { db } from '../../firebase/config';
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import React, { Component } from 'react';
+import { db } from "../../firebase/config"
+import { FontAwesome } from '@expo/vector-icons';
 
-const Buscador = ({ navigation }) => {
-    const [searchText, setSearchText] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
-    const [noResults, setNoResults] = useState(false);
+class Buscador extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            usuarios: [],
+            busqueda: '',
+            resultados: [],
+            mensaje: '',
+        };
+    }
 
-    const handleSearch = () => {
-        db.collection('users')
-            .where('userName', '>=', searchText.toLowerCase())
-            .where('userName', '<=', searchText.toLowerCase() + '\uf8ff')
-            .get()
-            .then((querySnapshot) => {
-                const users = [];
-                querySnapshot.forEach((doc) => {
-                    users.push({ id: doc.id, ...doc.data() });
-                });
-                setSearchResults(users);
-                setNoResults(users.length === 0);
+    componentDidMount() {
+        db.collection('users').onSnapshot(docs => {
+            let users = []
+            docs.forEach(doc => {
+                users.push({
+                    id: doc.id,
+                    data: doc.data()
+                })
             })
-            .catch((error) => {
-                console.log('Error getting documents: ', error);
+            this.setState({
+                usuarios: users,
             });
-    };
+            console.log("Usuarios:", users);
+        })
+    }
 
-    const navigateToProfile = (userId) => {
-        // Aquí puedes navegar al perfil del usuario según tu lógica de navegación
-        console.log(`Navigate to user profile with ID: ${userId}`);
-    };
+    controlarCambios(text) {
+        this.setState({
+            busqueda: text
+        })
+    }
 
-    return (
-        <View style={styles.container}>
-            <TextInput
-                style={styles.input}
-                placeholder="Buscar por email"
-                onChangeText={(text) => setSearchText(text)}
-                value={searchText}
-            />
-            <TouchableOpacity style={styles.button} onPress={handleSearch}>
-                <Text style={styles.buttonText}>Buscar</Text>
-            </TouchableOpacity>
+    buscarUsuarios() {
+        const busquedaLower = this.state.busqueda.toLowerCase();
 
-            {noResults && <Text style={styles.noResultsText}>El email no existe</Text>}
+        const resultados = this.state.usuarios.filter((usuario) => {
+            const userName = usuario.data.name || '';
+            return userName.toLowerCase().includes(busquedaLower);
+        });
 
-            <FlatList
-                data={searchResults}
-                keyExtractor={(user) => user.id}
-                renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.resultItem} onPress={() => navigateToProfile(item.id)}>
-                        <Text>Email: {item.email}</Text>
-                        <Text>Username: {item.username}</Text>
-                    </TouchableOpacity>
+        if (resultados.length === 0) {
+            this.setState({
+                resultados: [],
+                mensaje: 'No hay resultados que coincidan.',
+            });
+        } else {
+            this.setState({
+                resultados: resultados,
+                mensaje: '',
+            });
+        }
+    }
+
+    render() {
+        return (
+            <View style={styles.container}>
+                <TextInput
+                    style={styles.input}
+                    keyboardType='default'
+                    placeholder='Buscar...'
+                    onChangeText={(text) => this.controlarCambios(text)}
+                    value={this.state.busqueda}
+                />
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => this.buscarUsuarios()}
+                >
+                    <Text style={styles.buttonText}>Search</Text>
+                    <br />
+                    <br />
+                    <FontAwesome name="search" size={24} color="black" />
+                </TouchableOpacity>
+
+                {this.state.mensaje ? (
+                    <Text style={styles.mensaje}>{this.state.mensaje}</Text>
+                ) : (
+                    <FlatList
+                        data={this.state.resultados}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={({ item }) => (
+                            <View style={styles.Conteiner}>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate(
+                                    'FriendProfile', { user: item.data.owner })}>
+                                    <Text style={styles.user}>User Name: {item.data.name}</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                    />
                 )}
-            />
-        </View>
-    );
-};
+            </View>
+        )
+    }
+}
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#fff',
         padding: 20,
+        justifyContent: 'center',
     },
     input: {
         height: 40,
-        borderColor: 'gray',
         borderWidth: 1,
-        marginBottom: 10,
+        borderColor: '#ddd',
+        borderRadius: 5,
         paddingHorizontal: 10,
+        marginBottom: 20,
     },
     button: {
-        backgroundColor: '#3498db',
-        padding: 10,
+        flexDirection: 'row',
+        backgroundColor: 'blue',
+        paddingVertical: 10,
         borderRadius: 5,
         alignItems: 'center',
+        justifyContent: 'center',
     },
     buttonText: {
-        color: 'white',
-        fontSize: 16,
+        color: '#fff',
         fontWeight: 'bold',
+        marginRight: 5,
     },
-    noResultsText: {
-        color: 'red',
+    searchIcon: {
+        marginLeft: 5,
+    },
+    mensaje: {
         fontSize: 16,
-        marginTop: 10,
+        marginBottom: 10,
+        color: '#e74c3c',
+        textAlign: 'center',
     },
-    resultItem: {
+    Conteiner: {
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 5,
         padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        marginBottom: 10,
+    },
+    user: {
+        fontSize: 16,
     },
 });
+
 
 export default Buscador;

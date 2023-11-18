@@ -16,7 +16,7 @@ class Post extends Component {
       mostrarModal: false,
       comentarios: '',
       listaComentarios: null,
-      cantidadComentarios: 0 
+      cantidadComentarios: 0
     }
   }
 
@@ -28,13 +28,13 @@ class Post extends Component {
       })
     }
 
-    if(this.props.infoPost.datos.comentarios){
+    if (this.props.infoPost.datos.comentarios) {
       this.setState({
-          listaComentarios:this.props.infoPost.datos.comentarios,
-          cantidadComentarios: this.props.infoPost.datos.comentarios.length
+        listaComentarios: this.props.infoPost.datos.comentarios,
+        cantidadComentarios: this.props.infoPost.datos.comentarios.length
       })
+    }
   }
-}
 
   like() {
     db.collection('posts')
@@ -68,44 +68,40 @@ class Post extends Component {
 
   abrirModal() {
     this.setState({
-        mostrarModal: true,
+      mostrarModal: true,
     })
-}
+  }
 
   cerrarModal() {
     this.setState({
-        mostrarModal: false,
+      mostrarModal: false,
     })
-}
+  }
 
-guardarComentario(){
-  console.log ('Guardado comentario')
-  let unComentario ={
-      createdAt: Date.now (),
+  guardarComentario() {
+    console.log('Guardado comentario')
+    let unComentario = {
+      createdAt: Date.now(),
       autor: auth.currentUser.displayName,
       comentarios: this.state.comentarios
-  }
-  db.collection('posts').doc(this.props.infoPost.id).update({
+    }
+    db.collection('posts').doc(this.props.infoPost.id).update({
       comentarios: firebase.firestore.FieldValue.arrayUnion(unComentario)
-  })
-  .then(()=>{
-      this.setState({
+    })
+      .then(() => {
+        this.setState({
           comentarios: '',
           listaComentarios: this.props.infoPost.datos.comentarios,
           cantidadComentarios: this.props.infoPost.datos.comentarios.length
 
+        })
       })
-  })
-}
+  }
 
   borrarPost() {
     db.collection('posts').doc(this.props.infoPost.id).delete();
   }
 
-
-  comentario(){
-    
-  }
 
 
 
@@ -118,12 +114,12 @@ guardarComentario(){
             resizeMode="cover"
             style={styles.postImg}
           />
-          <Text style={styles.postText}>Texto: {this.props.infoPost.datos.textoPost}</Text>
-          <Text style={styles.postText}>Autor: {this.props.infoPost.datos.owner}</Text>
+          <Text style={styles.likeSection}> {this.props.infoPost.datos.textoPost}</Text>
+          <Text style={styles.likeSection}>Autor: {this.props.infoPost.datos.owner}</Text>
           <Text style={styles.likeSection}>Cantidad de likes: {this.state.cantidadDeLikes}</Text>
 
           <TouchableOpacity onPress={() => this.abrirModal()}>
-                    <Text style={styles.meGusta}> {this.state.cantidadComentarios} Comentarios</Text>
+            <Text style={styles.likeSection}> Comentarios: {this.state.cantidadComentarios} </Text>
           </TouchableOpacity>
 
           <View style={styles.actions}>
@@ -134,80 +130,79 @@ guardarComentario(){
                 <Text style={styles.likeButtonText}>Me gusta</Text>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity style={styles.likeButton}onPress={() => this.like()}>
+              <TouchableOpacity style={styles.likeButton} onPress={() => this.like()}>
                 <FontAwesome name="heart" color="black" size={28} />
                 <Text style={styles.likeButtonText}>No me gusta</Text>
               </TouchableOpacity>
             )}
 
             {this.props.infoPost.datos.owner === auth.currentUser.email ? (
-             <TouchableOpacity style={styles.text} onPress={() => this.borrarPost()}>
-              <FontAwesome name="trash-o" size={24} color="black" />
-             </TouchableOpacity>
-             ) : (
+              <TouchableOpacity style={styles.text} onPress={() => this.borrarPost()}>
+                <FontAwesome name="trash-o" size={24} color="black" />
+              </TouchableOpacity>
+            ) : (
               <Text></Text>
             )}
 
-            <TouchableOpacity style={styles.comentario} onPress={()=>this.abrirModal()}>
-                <Text>
-                    <Icon name="comments" size={30} color="#2099D8" />
-                </Text>
+            <TouchableOpacity style={styles.comentario} onPress={() => this.abrirModal()}>
+              <Text>
+                <Icon name="comments" size={30} color="#2099D8" />
+              </Text>
             </TouchableOpacity>
-        
+
           </View>
-|       
         </View>
 
-        { ! this.state.mostrarModal ?
-                       null
-                        :
-                        <Modal
-                                style={styles.modalContainer}
-                                visible={this.state.mostrarModal}
-                                animationType="slide"
-                                transparent={false}
-                                >
+        {!this.state.mostrarModal ?
+          null
+          :
+          <Modal
+            style={styles.modalContainer}
+            visible={this.state.mostrarModal}
+            animationType="slide"
+            transparent={false}
+          >
 
-                                    <TouchableOpacity onPress= {() => this.cerrarModal()} style={styles.closeModal}>
-                                        <Text>X</Text>
-                                    </TouchableOpacity>
-                                    
-                                
-                                    {
-                                this.state.listaComentarios ?
-                                
-                                <FlatList
-                                data={this.state.listaComentarios}
-                                keyExtractor={(comentarios) => comentarios.createdAt.toString ()}
-                                renderItem={ ({item})=> <Text> {item.autor}: {item.comentarios}</Text> }
-                                /> :
-                                <Text>Todavía no hay comentarios</Text>
-                            }
+            <TouchableOpacity onPress={() => this.cerrarModal()} style={styles.closeModal}>
+              <Text>X</Text>
+            </TouchableOpacity>
 
 
+            {
+              this.state.listaComentarios ?
 
-                        <View>
-                        <TextInput 
-                            style={styles.textButton}
-                            placeholder="Comentar"
-                            keyboardType="default"
-                            multiline
-                            value={this.state.comentarios}
-                            onChangeText={texto => this.setState({comentarios: texto})}
-                            
-                        />
-                        <TouchableOpacity 
-                            style={styles.button}
-                            onPress={()=>{this.guardarComentario()}} 
-                            disabled={this.state.comentarios == '' ? true:false}>
-                            <Text style={styles.textButton}>Guadar comentario</Text>
-                        </TouchableOpacity>
-                        </View>
-                        </Modal>
-                           
-                }
-                
+                <FlatList
+                  data={this.state.listaComentarios}
+                  keyExtractor={(comentarios) => comentarios.createdAt.toString()}
+                  renderItem={({ item }) => <Text> {item.autor}: {item.comentarios}</Text>}
+                /> :
+                <Text>Todavía no hay comentarios</Text>
+            }
+
+
+
+            <View>
+              <TextInput
+                style={styles.comment}
+                placeholder="Escribe un comentario..."
+                keyboardType="default"
+                multiline
+                value={this.state.comentarios}
+                onChangeText={texto => this.setState({ comentarios: texto })}
+
+              />
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => { this.guardarComentario() }}
+                disabled={this.state.comentarios == '' ? true : false}>
+                <Text style={styles.commentButton}>Comentar</Text>
+              </TouchableOpacity>
             </View>
+          </Modal>
+
+        }
+
+      </View>
     );
   }
 }
@@ -233,10 +228,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
-  postText: {
-    fontSize: 16,
-    margin: 10,
-  },
   likeSection: {
     fontSize: 16,
     marginHorizontal: 10,
@@ -257,7 +248,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
 
-  boton:{
+  boton: {
     fontFamily: 'Arial',
     fontSize: 16,
     margin: 10,
@@ -265,11 +256,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     textAlign: 'center',
     padding: 5
-  
+
   },
 
   modalContainer: {
-    width:'100%',  
+    width: '100%',
     flex: 3,
     alignSelf: 'center',
     backgroundColor: "white",
@@ -277,34 +268,40 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     backgroundColor: '#000000',
-},
-textButton: {
-  color: "black",
-},
-closeModal:{
-  alignSelf: 'flex-end',
-  padding: 10,
-  backgroundColor: '#dc3545',
-  marginTop:2,
-  borderRadius: 10,
-},
-comentario: {
-  backgroundColor: "#fde79e",
-  backgroundColor: "#",
-  paddingHorizontal: 10,
-  paddingVertical: 6,
-  textAlign: "center",
-  borderRadius: 10,
-  borderWidth: 1,
-  borderStyle: "solid",
-  backgroundColor: "#F1F1F1",
-  borderColor: "#F1F1F1",
-  
-},
-meGusta: {
-  textAlign: "left",
-  marginVertical: 10
-},
+    
+  },
+  comment: {
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 5,
+    color: "black",
+    marginLeft: 5
+  },
+  commentButton:{
+    color: 'black',
+    marginTop: 20,
+    marginLeft: 5
+  },
+  closeModal: {
+    alignSelf: 'flex-end',
+    padding: 10,
+    backgroundColor: '#dc3545',
+    marginTop: 2,
+    borderRadius: 10,
+  },
+  comentario: {
+    backgroundColor: "#fde79e",
+    backgroundColor: "#",
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    textAlign: "center",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderStyle: "solid",
+    backgroundColor: "#F1F1F1",
+    borderColor: "#F1F1F1",
+
+  },
 });
 
 export default Post;
