@@ -1,7 +1,7 @@
-import { Text, View } from 'react-native'
 import React, { Component } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import MyProfile from '../../screens/MyProfile/MyProfile'
+import Login from '../../screens/Login/Login';
 
 const Stack = createNativeStackNavigator()
 
