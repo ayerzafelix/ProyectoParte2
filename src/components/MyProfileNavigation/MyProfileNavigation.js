@@ -10,8 +10,8 @@ class MyProfileNavigation extends Component {
   render() {
     return (
       <Stack.Navigator>
-        <Stack.Screen name='MyProfile'component={MyProfile} logout={() => this.logout()} options={{ headerShown: false }}/>
-        <Stack.Screen name='Login'component={Login} options={{ headerShown: false }}/>
+        <Stack.Screen name='MyProfile' component={MyProfile} logout={() => this.logout()} options={{ headerShown: false }} />
+        <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
       </Stack.Navigator>
     )
   }

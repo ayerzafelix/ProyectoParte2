@@ -14,25 +14,6 @@ class Login extends Component {
         }
     }
 
-    async componentDidMount() {
-        const storedCredentials = await AsyncStorage.getItem('users');
-        if (storedCredentials) {
-            const { email, pass } = JSON.parse(storedCredentials);
-            this.setState({ email, pass, rememberMe: true });
-        }
-    } catch(error) {
-        console.error('Error al recuperar las credenciales:', error);
-
-    }
-
-    guardarCredenciales() {
-        // Guarda las credenciales en AsyncStorage cuando "Remember Me" está marcado
-        if (this.state.rememberMe) {
-            const credentials = { email: this.state.email, pass: this.state.pass };
-            AsyncStorage.setItem('users', JSON.stringify(credentials))
-                .catch(error => console.error('Error al guardar las credenciales:', error));
-        }
-    }
 
     loguearUsuario(email, pass) {
         auth.signInWithEmailAndPassword(email, pass)

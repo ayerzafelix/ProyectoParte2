@@ -61,9 +61,9 @@ class Buscador extends Component {
         return (
             <View style={styles.container}>
 
-        <View>
-          <Text style={styles.titulo}>Buscador</Text>
-          </View>
+                <View>
+                    <Text style={styles.titulo}>Buscador</Text>
+                </View>
 
 
                 <TextInput
@@ -109,9 +109,9 @@ const styles = StyleSheet.create({
     titulo: {
         fontSize: 30,
         fontWeight: 'bold',
-        marginTop: 0, 
+        marginTop: 0,
         marginBottom: 20,
-      },
+    },
 
 
     container: {

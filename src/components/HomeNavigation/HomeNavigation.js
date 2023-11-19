@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Home from '../../screens/Home/Home'
 import FriendProfile from '../../screens/FriendProfile/FriendProfile'
 
+
 const Stack = createNativeStackNavigator()
 
 class HomeNavigation extends Component {
@@ -10,8 +11,8 @@ class HomeNavigation extends Component {
   render() {
     return (
       <Stack.Navigator>
-        <Stack.Screen name='Home'component={Home} options={{ headerShown: false }}/>
-        <Stack.Screen name='FriendProfile'component={FriendProfile} options={{ headerShown: false }}/>
+        <Stack.Screen name='Home' component={Home} options={{ headerShown: false }} />
+        <Stack.Screen name='FriendProfile' component={FriendProfile} options={{ headerShown: false }} />
       </Stack.Navigator>
     )
   }

@@ -84,7 +84,6 @@ class Register extends Component {
             keyboardType='default'
             value={this.state.biografia}
           />
-
           <Text style={styles.elAsterisco}> Los campos que contienen "*" son obligatorios</Text>
 
           {this.state.email === "" || this.state.password === "" || this.state.userName === "" ?
@@ -95,7 +94,7 @@ class Register extends Component {
             </TouchableOpacity>
           }
         </View>
-                    <Text>¿Ya tienes una cuenta? Haz click en login en la parte inferior de la pantala. </Text>
+        <Text>¿Ya tienes una cuenta? Haz click en login en la parte inferior de la pantala. </Text>
         <View>
           <Text style={styles.error}>{this.state.errors}</Text>
         </View>
@@ -178,8 +177,8 @@ const styles = StyleSheet.create({
     color: "red",
   },
 
-  elAsterisco:{
-    color:"rgb(89, 1, 1)",
+  elAsterisco: {
+    color: "rgb(89, 1, 1)",
 
   }
 })

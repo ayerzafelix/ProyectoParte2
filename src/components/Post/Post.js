@@ -113,12 +113,12 @@ class Post extends Component {
           />
           <Text style={styles.likeSection}> {this.props.infoPost.datos.textoPost}</Text>
           {auth.currentUser.email === this.props.infoPost.datos.owner ? (
-          <Text onPress={() => this.props.navigation.navigate("MyProfile")} style={styles.titleSection}>
-          {this.props.infoPost.datos.owner}</Text>  
-           ) : (
-          <Text onPress={() => this.props.navigation.navigate("FriendProfile",{ user: this.props.infoPost.datos.owner })} style={styles.titleSection}>
-          {this.props.infoPost.datos.owner}</Text>
-           )}
+            <Text onPress={() => this.props.navigation.navigate("MyProfile")} style={styles.titleSection}>
+              {this.props.infoPost.datos.owner}</Text>
+          ) : (
+            <Text onPress={() => this.props.navigation.navigate("FriendProfile", { user: this.props.infoPost.datos.owner })} style={styles.titleSection}>
+              {this.props.infoPost.datos.owner}</Text>
+          )}
           <Text style={styles.likeSection}>Cantidad de likes: {this.state.cantidadDeLikes}</Text>
 
           <TouchableOpacity onPress={() => this.abrirModal()}>
@@ -130,14 +130,14 @@ class Post extends Component {
             {this.state.like ? (
               <TouchableOpacity style={styles.likeButton} onPress={() => this.unLike()}>
                 <FontAwesome name="heart" color="red" size={28} />
-                <Text style={styles.likeButtonText}>Like</Text>
+                <Text style={styles.likeButtonText}>Me gusta</Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity style={styles.likeButton} onPress={() => this.like()}>
                 <FontAwesome name="heart" color="black" size={28} />
-                <Text style={styles.likeButtonText}>Deslikear</Text>
+                <Text style={styles.likeButtonText}>No me gusta</Text>
               </TouchableOpacity>
-              
+
             )}
 
             <TouchableOpacity style={styles.comentario} onPress={() => this.abrirModal()}>
@@ -164,8 +164,8 @@ class Post extends Component {
             </TouchableOpacity>
 
             <View>
-            <Text style={styles.titulo}> Comentarios del post: </Text>
-            </View>         
+              <Text style={styles.titulo}> Comentarios del post: </Text>
+            </View>
 
 
             {
@@ -204,12 +204,12 @@ class Post extends Component {
 
         }
         {this.props.infoPost.datos.owner === auth.currentUser.email ? (
-              <TouchableOpacity style={styles.text} onPress={() => this.borrarPost()}>
-                <FontAwesome name="trash-o" size={24} color="black" />
-              </TouchableOpacity>
-            ) : (
-              <Text></Text>
-            )}
+          <TouchableOpacity style={styles.text} onPress={() => this.borrarPost()}>
+            <FontAwesome name="trash-o" size={24} color="black" />
+          </TouchableOpacity>
+        ) : (
+          <Text></Text>
+        )}
 
       </View>
     );
@@ -226,9 +226,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
-  losComentarios:{
+  losComentarios: {
     color: 'rgb(5, 35, 125)',
-  fontSize: 18,
+    fontSize: 18,
     width: '30%',
     height: 30,
     marginLeft: 5,
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     backgroundColor: '#000000',
-    
+
   },
   comment: {
     width: '30%',
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
     color: "black",
     marginLeft: 5
   },
-  commentButton:{
+  commentButton: {
     fontSize: 20,
     fontWeight: 'bold',
     color: 'black',

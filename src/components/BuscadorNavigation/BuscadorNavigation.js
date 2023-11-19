@@ -11,10 +11,10 @@ class BuscadorNavigation extends Component {
   render() {
     return (
       <Stack.Navigator>
-        <Stack.Screen name='Buscador'component={Buscador} options={{ headerShown: false }}/>
-        <Stack.Screen name='FriendProfile'component={FriendProfile} options={{ headerShown: false }}/>
-        <Stack.Screen name='Home'component={Home} options={{ headerShown: false }}/>
-       
+        <Stack.Screen name='Buscador' component={Buscador} options={{ headerShown: false }} />
+        <Stack.Screen name='FriendProfile' component={FriendProfile} options={{ headerShown: false }} />
+        <Stack.Screen name='Home' component={Home} options={{ headerShown: false }} />
+
       </Stack.Navigator>
     )
   }

@@ -19,13 +19,13 @@ class AddPost extends Component {
     console.log(this.props);
     // Crear la colección Users
     db.collection('posts').add({
-        owner: auth.currentUser.email,
-        textoPost: this.state.textoPost,
-        fotoUrl: fotoUrl,
-        likes: [],
-        comentarios: [],
-        createdAt: Date.now(),
-      })
+      owner: auth.currentUser.email,
+      textoPost: this.state.textoPost,
+      fotoUrl: fotoUrl,
+      likes: [],
+      comentarios: [],
+      createdAt: Date.now(),
+    })
       .then(() => {
         this.props.navigation.navigate('Home');
       })
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   titulo: {
     fontSize: 30,
     fontWeight: 'bold',
-    marginTop: 40, 
+    marginTop: 40,
     alignItems: ''
   },
 

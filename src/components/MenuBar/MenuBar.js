@@ -46,11 +46,11 @@ class MenuBar extends Component {
             <NavigationContainer>
                 {this.state.logueado ? (
                     <Tab.Navigator screenOptions={({ route }) => ({ tabBarIcon: ({ color }) => screenOptions(route, color) })}>
-                        <Tab.Screen options={{ headerShown: false }} name="Home" component={() => <HomeNavigation/>} />
-                        <Tab.Screen options={{ headerShown: false}} name="Buscador" component={() => <BuscadorNavigation/>} />
-                        <Tab.Screen options={{ headerShown: false, lazy: true }} name="AddPost" component={(drawerProps) => <AddPostNavigation drawerProps={drawerProps}/>}/> 
+                        <Tab.Screen options={{ headerShown: false }} name="Home" component={() => <HomeNavigation />} />
+                        <Tab.Screen options={{ headerShown: false }} name="Buscador" component={() => <BuscadorNavigation />} />
+                        <Tab.Screen options={{ headerShown: false, lazy: true }} name="AddPost" component={(drawerProps) => <AddPostNavigation drawerProps={drawerProps} />} />
                         <Tab.Screen options={{ headerShown: false }} name="MyProfile" component={() => <MyProfileNavigation />} />
-                    </Tab.Navigator>)        
+                    </Tab.Navigator>)
                     :
                     (<Tab.Navigator screenOptions={({ route }) => ({ tabBarIcon: ({ color }) => screenOptions(route, color) })}>
                         <Tab.Screen options={{ headerShown: false }} name="Login" component={() => <Login />} />

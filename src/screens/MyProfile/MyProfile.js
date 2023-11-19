@@ -4,53 +4,53 @@ import { auth, db, storage } from '../../firebase/config';
 import Post from '../../components/Post/Post';
 
 class MyProfile extends Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        user: null,
-        posts: [],
-        isMounted: true,  // Agregamos un indicador de montaje
-      };
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: null,
+      posts: [],
+      isMounted: true,  // Agregamos un indicador de montaje
+    };
+  }
+
+  componentDidMount() {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      this.fetchUserData();
+      this.fetchUserPosts();
+    } else {
+      this.props.navigation.navigate('Login');
     }
+  }
 
-    componentDidMount() {
-        const currentUser = auth.currentUser;
-        if (currentUser) {
-          this.fetchUserData();
-          this.fetchUserPosts();
-        } else {
-          this.props.navigation.navigate('Login');
-        }
-      }
-    
-      componentWillUnmount() {
-        // Establecer el indicador de montaje a falso al desmontar el componente
-        this.setState({ isMounted: false });
-      }
+  componentWillUnmount() {
+    // Establecer el indicador de montaje a falso al desmontar el componente
+    this.setState({ isMounted: false });
+  }
 
-      fetchUserData() {
-        const currentUser = auth.currentUser;
-    
-        if (currentUser) {
-          db.collection('users')
-            .where('owner', '==', currentUser.email)
-            .onSnapshot((docs) => {
-              let user = [];
-              docs.forEach((doc) => {
-                user.push({
-                  id: doc.id,
-                  data: doc.data(),
-                });
-              });
-              // Actualizar el estado solo si el componente aún está montado
-              if (this.state.isMounted) {
-                this.setState({ user: user[0] });
-              }
+  fetchUserData() {
+    const currentUser = auth.currentUser;
+
+    if (currentUser) {
+      db.collection('users')
+        .where('owner', '==', currentUser.email)
+        .onSnapshot((docs) => {
+          let user = [];
+          docs.forEach((doc) => {
+            user.push({
+              id: doc.id,
+              data: doc.data(),
             });
-        } else {
-          console.error('El usuario no está autenticado');
-        }
-      }
+          });
+          // Actualizar el estado solo si el componente aún está montado
+          if (this.state.isMounted) {
+            this.setState({ user: user[0] });
+          }
+        });
+    } else {
+      console.error('El usuario no está autenticado');
+    }
+  }
 
   fetchUserPosts() {
     const currentUser = auth.currentUser;
@@ -86,22 +86,10 @@ class MyProfile extends Component {
   }
 
   signOut() {
-    auth
-      .signOut()
-      .then(() => {
-        // Verificar si el componente aún está montado antes de actualizar el estado
-        if (this.state.isMounted) {
-          this.setState({ isMounted: false }, () => {
-            this.props.navigation.navigate('Login');
-            this.forceUpdate();
-          });
-        }
-      })
-      .catch((error) => {
-        console.error('Error durante el cierre de sesión:', error);
-      });
+    auth.signOut();
+    this.props.navigation.navigate('Login')
   }
- 
+
   render() {
     const { user, posts } = this.state;
 
@@ -112,17 +100,13 @@ class MyProfile extends Component {
         </View>
       );
     }
-   
+
     return (
       <View style={styles.container}>
-              <Text style={styles.titulo}>My Profile</Text>
+        <Text style={styles.titulo}>My Profile</Text>
         <Text style={styles.textUsername}>Username: {user.data.name}</Text>
         <Text style={styles.textEmail}>Email: {user.data.owner}</Text>
         <Text style={styles.textMiniBio}>Mini Bio: {user.data.biografia || 'No mini bio available'}</Text>
-
-        {user.profileImageUrl && (
-          <Image source={{ uri: user.profileImageUrl }} style={styles.profileImage} />
-        )}
 
         <Text style={styles.textTotalPosts}>Total Posts: {posts.length}</Text>
 
@@ -146,7 +130,7 @@ const styles = StyleSheet.create({
   titulo: {
     fontSize: 30,
     fontWeight: 'bold',
-    marginBottom: 15, 
+    marginBottom: 15,
     alignItems: ''
   },
 

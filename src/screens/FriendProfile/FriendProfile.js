@@ -4,9 +4,9 @@ import { auth, db } from '../../firebase/config';
 import Post from '../../components/Post/Post';
 
 class FriendProfile extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
-        this.state={
+        this.state = {
             posts: [],
             info: {},
             user: this.props.route.params.user
@@ -14,45 +14,45 @@ class FriendProfile extends Component {
 
     }
 
-    componentDidMount(){
+    componentDidMount() {
         console.log(this.props.route.params)
         let profile = this.state.user
         db.collection('posts')
-        .where ('owner', '==', profile)
-        .onSnapshot(docs => {
-            let posts = []
-            docs.forEach(doc => posts.push({
-                id: doc.id,
-                datos: doc.data()
-            }))
-            this.setState({
-                posts: posts
+            .where('owner', '==', profile)
+            .onSnapshot(docs => {
+                let posts = []
+                docs.forEach(doc => posts.push({
+                    id: doc.id,
+                    datos: doc.data()
+                }))
+                this.setState({
+                    posts: posts
+                })
             })
-        })
         db.collection('users')
-            .where ('owner', '==', this.state.user)
-            .onSnapshot (doc => {
+            .where('owner', '==', this.state.user)
+            .onSnapshot(doc => {
                 doc.forEach(doc =>
-                    this.setState ({
+                    this.setState({
                         id: doc.id,
                         info: doc.data()
-                }))
+                    }))
             })
 
     }
 
-    render(){
+    render() {
         console.log(this.state.info)
         console.log(this.state.posts)
 
-        return(
+        return (
             <ScrollView style={styles.container}>
                 <View style={styles.profileInfo}>
-                <Text style={styles.username}>{this.state.info.userName}</Text>
-                <Text style={styles.bio}> Biografía:{this.state.info.minibio}</Text>
-                <Text style={styles.posts} >Cantidad de posts: {this.state.posts.length}</Text>
-                <Image style={styles.profileImage} source={{ uri: this.state.info.profileImage }}/>
-                </View> 
+                    <Text style={styles.username}>Username: {this.state.info.name}</Text>
+                    <Text style={styles.bio}> Biografía: {this.state.info.biografia}</Text>
+                    <Text style={styles.posts} >Cantidad de posts: {this.state.posts.length}</Text>
+                    <Image style={styles.profileImage} source={{ uri: this.state.info.profileImage }} />
+                </View>
 
                 <Text style={styles.sectionTitle}>Posteos:</Text>
                 <FlatList
@@ -61,9 +61,9 @@ class FriendProfile extends Component {
                     renderItem={({ item }) => <Post infoPost={item} navigation={this.props.navigation} />}
                 />
                 <Text onPress={() => this.props.navigation.navigate("Home")}>
-                Volver a home
+                    Volver a home
                 </Text>
-            
+
             </ScrollView>
 
         )
@@ -78,8 +78,8 @@ const styles = StyleSheet.create({
         shadowOffset: {
             width: 0,
             height: 2,
+        },
     },
-},
     profileInfo: {
         alignItems: 'center',
         marginBottom: 20,
