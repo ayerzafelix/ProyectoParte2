@@ -7,9 +7,12 @@ import AddPost from '../../screens/AddPost/AddPost'
 import Login from '../../screens/Login/Login';
 import Register from '../../screens/Register/Register';
 import MyProfile from '../../screens/MyProfile/MyProfile';
-import LoggedNavigation from '../../components/LoggedNavigation/LoggedNavigation';
+import BuscadorNavigation from '../../components/BuscadorNavigation/BuscadorNavigation';
 import { auth } from '../../firebase/config';
 import Buscador from '../../screens/Buscador/Buscador';
+import Home from '../../screens/Home/Home';
+import FriendProfile from '../../screens/FriendProfile/FriendProfile'
+import Post from '../../components/Post/Post'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -50,11 +53,11 @@ class MenuBar extends Component {
             <NavigationContainer>
                 {this.state.logueado ? (
                     <Tab.Navigator screenOptions={({ route }) => ({ tabBarIcon: ({ color }) => screenOptions(route, color) })}>
-                        <Tab.Screen options={{ headerShown: false }} name="Home" component={() => <LoggedNavigation />} />
-                        <Tab.Screen options={{ headerShown: false }} name="Buscador" component={() => <Buscador />} />
+                        <Tab.Screen options={{ headerShown: false }} name="Home" component={() => <Home />} />
+                        <Tab.Screen options={{ headerShown: false}} name="Buscador" component={() => <BuscadorNavigation/>} />
                         <Tab.Screen options={{ headerShown: false, lazy: true }} name="AddPost" component={(drawerProps) => <AddPost drawerProps={drawerProps} />} />
                         <Tab.Screen options={{ headerShown: false }} name="MyProfile" component={() => <MyProfile logout={() => this.logout()} />} />
-                    </Tab.Navigator>)
+                    </Tab.Navigator>)        
                     :
                     (<Tab.Navigator screenOptions={({ route }) => ({ tabBarIcon: ({ color }) => screenOptions(route, color) })}>
                         <Tab.Screen options={{ headerShown: false }} name="Login" component={() => <Login />} />
