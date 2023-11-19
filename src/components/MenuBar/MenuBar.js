@@ -9,7 +9,7 @@ import Register from '../../screens/Register/Register';
 import MyProfile from '../../screens/MyProfile/MyProfile';
 import BuscadorNavigation from '../../components/BuscadorNavigation/BuscadorNavigation';
 import { auth } from '../../firebase/config';
-import Buscador from '../../screens/Buscador/Buscador';
+import MyProfileNavigation from '../../components/MyProfileNavigation/MyProfileNavigation';
 import Home from '../../screens/Home/Home';
 import FriendProfile from '../../screens/FriendProfile/FriendProfile'
 import Post from '../../components/Post/Post'
@@ -56,7 +56,7 @@ class MenuBar extends Component {
                         <Tab.Screen options={{ headerShown: false }} name="Home" component={() => <Home />} />
                         <Tab.Screen options={{ headerShown: false}} name="Buscador" component={() => <BuscadorNavigation/>} />
                         <Tab.Screen options={{ headerShown: false, lazy: true }} name="AddPost" component={(drawerProps) => <AddPost drawerProps={drawerProps} />} />
-                        <Tab.Screen options={{ headerShown: false }} name="MyProfile" component={() => <MyProfile logout={() => this.logout()} />} />
+                        <Tab.Screen options={{ headerShown: false }} name="MyProfile" component={() => <MyProfileNavigation />} />
                     </Tab.Navigator>)        
                     :
                     (<Tab.Navigator screenOptions={({ route }) => ({ tabBarIcon: ({ color }) => screenOptions(route, color) })}>

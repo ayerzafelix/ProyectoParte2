@@ -13,27 +13,35 @@ class MyProfile extends Component {
   }
 
   componentDidMount() {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
     this.fetchUserData();
     this.fetchUserPosts();
+    } else {
+    this.props.navigation.navigate('Login');
   }
+}
 
   fetchUserData() {
     const currentUser = auth.currentUser;
 
-    currentUser & db.collection('users')
-      .where('owner', '==', currentUser.email)
-      .onSnapshot((docs) => {
-
-        let user = []
-        docs.forEach(doc => {
-          user.push({
-            id: doc.id,
-            data: doc.data()
-          })
-        })
-        this.setState({ user: user[0] });
-      });
-  }
+    if (currentUser) {
+        db.collection('users')
+          .where('owner', '==', currentUser.email)
+          .onSnapshot((docs) => {
+            let user = []
+            docs.forEach(doc => {
+              user.push({
+                id: doc.id,
+                data: doc.data()
+              })
+            })
+            this.setState({ user: user[0] });
+          });
+      } else {
+        console.error("El usuario no está autenticado");
+      }
+    }
 
   fetchUserPosts() {
     const currentUser = auth.currentUser;
@@ -78,7 +86,7 @@ class MyProfile extends Component {
         console.error("Error during logout:", error);
       });
   }
-
+ 
   render() {
     const { user, posts } = this.state;
 
@@ -89,7 +97,7 @@ class MyProfile extends Component {
         </View>
       );
     }
-
+   
     return (
       <View style={styles.container}>
         <Text style={styles.textUsername}>Username: {user.data.name}</Text>
