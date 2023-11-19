@@ -136,14 +136,6 @@ class Post extends Component {
               </TouchableOpacity>
             )}
 
-            {this.props.infoPost.datos.owner === auth.currentUser.email ? (
-              <TouchableOpacity style={styles.text} onPress={() => this.borrarPost()}>
-                <FontAwesome name="trash-o" size={24} color="black" />
-              </TouchableOpacity>
-            ) : (
-              <Text></Text>
-            )}
-
             <TouchableOpacity style={styles.comentario} onPress={() => this.abrirModal()}>
               <Text>
                 <Icon name="comments" size={30} color="#2099D8" />
@@ -201,6 +193,13 @@ class Post extends Component {
           </Modal>
 
         }
+        {this.props.infoPost.datos.owner === auth.currentUser.email ? (
+              <TouchableOpacity style={styles.text} onPress={() => this.borrarPost()}>
+                <FontAwesome name="trash-o" size={24} color="black" />
+              </TouchableOpacity>
+            ) : (
+              <Text></Text>
+            )}
 
       </View>
     );

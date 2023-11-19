@@ -1,33 +1,55 @@
 import React, { Component } from 'react';
 import { auth } from '../../firebase/config';
-import { TextInput, TouchableOpacity, View, Text, StyleSheet } from 'react-native';
+import { TextInput, TouchableOpacity, View, Text, StyleSheet, CheckBox } from 'react-native';
+import { AsyncStorage } from 'react-native';
 
 class Login extends Component {
     constructor() {
         super()
         this.state = {
             email: '',
-            password: '',
-            errors: ''
+            pass: '',
+            errors: '',
+            rememberMe: false
+        }
+    }
+
+    async componentDidMount() {
+        const storedCredentials = await AsyncStorage.getItem('users');
+        if (storedCredentials) {
+            const { email, pass } = JSON.parse(storedCredentials);
+            this.setState({ email, pass, rememberMe: true });
+        }
+    } catch(error) {
+        console.error('Error al recuperar las credenciales:', error);
+
+    }
+
+    guardarCredenciales() {
+        // Guarda las credenciales en AsyncStorage cuando "Remember Me" está marcado
+        if (this.state.rememberMe) {
+            const credentials = { email: this.state.email, pass: this.state.pass };
+            AsyncStorage.setItem('users', JSON.stringify(credentials))
+                .catch(error => console.error('Error al guardar las credenciales:', error));
         }
     }
 
     loguearUsuario(email, pass) {
         auth.signInWithEmailAndPassword(email, pass)
             .then(() => {
+                this.guardarCredenciales(); // Llamada para guardar las credenciales
                 this.setState({
                     email: '',
                     password: '',
-                    errors: ''
-                })
+                    errors: '',
+                });
             })
             .catch(error => {
                 this.setState({
-                    errors: `Error al intentar loguerse: ${error.message}`
-                })
-            })
+                    errors: `Error al intentar loguearse: ${error.message}`,
+                });
+            });
     }
-
     render() {
         return (
             <View style={styles.contenedor}>
@@ -48,7 +70,13 @@ class Login extends Component {
                         secureTextEntry={true}
                         value={this.state.password}
                     />
-
+                    <View style={styles.rememberMeContainer}>
+                        <CheckBox
+                            value={this.state.rememberMe}
+                            onValueChange={() => this.setState({ rememberMe: !this.state.rememberMe })}
+                        />
+                        <Text>Remember Me</Text>
+                    </View>
                     {this.state.email === "" || this.state.password === "" ?
                         <Text style={styles.button}>Done</Text>
                         :
@@ -140,7 +168,12 @@ const styles = StyleSheet.create({
 
     error: {
         color: "red",
-    }
+    },
+    rememberMeContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 15,
+    },
 })
 
 
