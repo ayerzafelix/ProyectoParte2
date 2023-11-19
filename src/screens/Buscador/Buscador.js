@@ -44,7 +44,7 @@ class Buscador extends Component {
             return userName.toLowerCase().includes(busquedaLower);
         });
 
-        if (resultados.length === 0) {
+        if (resultados.length === 0 || this.state.busqueda.trim() === '') {
             this.setState({
                 resultados: [],
                 mensaje: 'No hay resultados que coincidan.',
