@@ -43,7 +43,7 @@ class Home extends Component {
           <View style={styles.logoSignOut}>
           <TouchableOpacity onPress={this.handleLogout}>
             <FontAwesome name="sign-out" size={30} color="red"/>
-            <Text style={styles.textoSignOut}>Sign out</Text>
+            <Text style={styles.textoSignOut}>Logout</Text>
           </TouchableOpacity>
           </View>
           

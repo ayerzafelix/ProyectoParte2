@@ -231,7 +231,8 @@ const styles = StyleSheet.create({
   fontSize: 18,
     width: '30%',
     height: 30,
-    marginLeft: 5
+    marginLeft: 5,
+    marginBottom: 40,
   },
 
 
