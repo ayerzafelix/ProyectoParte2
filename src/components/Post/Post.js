@@ -112,7 +112,7 @@ class Post extends Component {
             style={styles.postImg}
           />
           <Text style={styles.likeSection}> {this.props.infoPost.datos.textoPost}</Text>
-          {auth.currentUser.owner === this.props.infoPost.datos.owner ? (
+          {auth.currentUser.email === this.props.infoPost.datos.owner ? (
           <Text onPress={() => this.props.navigation.navigate("MyProfile")} style={styles.titleSection}>
           {this.props.infoPost.datos.owner}</Text>  
            ) : (
