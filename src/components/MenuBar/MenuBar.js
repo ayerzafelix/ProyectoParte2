@@ -1,21 +1,15 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, ActivityIndicator } from 'react-native'
+import { auth } from '../../firebase/config';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import AddPostNavigation from '../../components/AddPostNavigation/AddPostNavigation'
-
 import Login from '../../screens/Login/Login';
 import Register from '../../screens/Register/Register';
-import MyProfile from '../../screens/MyProfile/MyProfile';
+import AddPostNavigation from '../../components/AddPostNavigation/AddPostNavigation'
 import BuscadorNavigation from '../../components/BuscadorNavigation/BuscadorNavigation';
-import { auth } from '../../firebase/config';
 import MyProfileNavigation from '../../components/MyProfileNavigation/MyProfileNavigation';
-import Home from '../../screens/Home/Home';
-import FriendProfile from '../../screens/FriendProfile/FriendProfile'
-import Post from '../../components/Post/Post'
 import HomeNavigation from '../../components/HomeNavigation/HomeNavigation'
 import Icon from 'react-native-vector-icons/FontAwesome';
-
 
 const Tab = createBottomTabNavigator();
 
@@ -61,8 +55,6 @@ class MenuBar extends Component {
                     (<Tab.Navigator screenOptions={({ route }) => ({ tabBarIcon: ({ color }) => screenOptions(route, color) })}>
                         <Tab.Screen options={{ headerShown: false }} name="Login" component={() => <Login />} />
                         <Tab.Screen options={{ headerShown: false }} name="Register" component={() => <Register />} />
-
-
                     </Tab.Navigator>
                     )}
             </NavigationContainer>
