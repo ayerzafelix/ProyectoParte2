@@ -102,9 +102,6 @@ class Post extends Component {
     db.collection('posts').doc(this.props.infoPost.id).delete();
   }
 
-
-
-
   render() {
     return (
       <View style={styles.container}>
@@ -115,7 +112,13 @@ class Post extends Component {
             style={styles.postImg}
           />
           <Text style={styles.likeSection}> {this.props.infoPost.datos.textoPost}</Text>
-          <Text style={styles.likeSection}>Autor: {this.props.infoPost.datos.owner}</Text>
+          {auth.currentUser.owner === this.props.infoPost.datos.owner ? (
+          <Text onPress={() => this.props.navigation.navigate("MyProfile")} style={styles.titleSection}>
+          {this.props.infoPost.datos.owner}</Text>  
+           ) : (
+          <Text onPress={() => this.props.navigation.navigate("FriendProfile",{ user: this.props.infoPost.datos.owner })} style={styles.titleSection}>
+          {this.props.infoPost.datos.owner}</Text>
+           )}
           <Text style={styles.likeSection}>Cantidad de likes: {this.state.cantidadDeLikes}</Text>
 
           <TouchableOpacity onPress={() => this.abrirModal()}>
@@ -127,13 +130,14 @@ class Post extends Component {
             {this.state.like ? (
               <TouchableOpacity style={styles.likeButton} onPress={() => this.unLike()}>
                 <FontAwesome name="heart" color="red" size={28} />
-                <Text style={styles.likeButtonText}>Me gusta</Text>
+                <Text style={styles.likeButtonText}>Like</Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity style={styles.likeButton} onPress={() => this.like()}>
                 <FontAwesome name="heart" color="black" size={28} />
-                <Text style={styles.likeButtonText}>No me gusta</Text>
+                <Text style={styles.likeButtonText}>Deslikear</Text>
               </TouchableOpacity>
+              
             )}
 
             <TouchableOpacity style={styles.comentario} onPress={() => this.abrirModal()}>
@@ -231,6 +235,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginHorizontal: 10,
     marginBottom: 20,
+  },
+  titleSection: {
+    fontSize: 16,
+    marginHorizontal: 10,
+    marginBottom: 20,
+    fontWeight: 'bold'
   },
   actions: {
     flexDirection: 'row',

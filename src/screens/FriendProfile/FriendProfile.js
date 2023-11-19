@@ -60,7 +60,7 @@ class FriendProfile extends Component {
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => <Post infoPost={item} navigation={this.props.navigation} />}
                 />
-                <Text onPress={() => this.props.navigation.navigate("TabNavigation")}>
+                <Text onPress={() => this.props.navigation.navigate("Home")}>
                 Volver a home
                 </Text>
             

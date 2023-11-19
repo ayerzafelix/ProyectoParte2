@@ -4,44 +4,53 @@ import { auth, db, storage } from '../../firebase/config';
 import Post from '../../components/Post/Post';
 
 class MyProfile extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: null,
-      posts: [],
-    };
-  }
-
-  componentDidMount() {
-    const currentUser = auth.currentUser;
-    if (currentUser) {
-    this.fetchUserData();
-    this.fetchUserPosts();
-    } else {
-    this.props.navigation.navigate('Login');
-  }
-}
-
-  fetchUserData() {
-    const currentUser = auth.currentUser;
-
-    if (currentUser) {
-        db.collection('users')
-          .where('owner', '==', currentUser.email)
-          .onSnapshot((docs) => {
-            let user = []
-            docs.forEach(doc => {
-              user.push({
-                id: doc.id,
-                data: doc.data()
-              })
-            })
-            this.setState({ user: user[0] });
-          });
-      } else {
-        console.error("El usuario no está autenticado");
-      }
+    constructor(props) {
+      super(props);
+      this.state = {
+        user: null,
+        posts: [],
+        isMounted: true,  // Agregamos un indicador de montaje
+      };
     }
+
+    componentDidMount() {
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+          this.fetchUserData();
+          this.fetchUserPosts();
+        } else {
+          this.props.navigation.navigate('Login');
+        }
+      }
+    
+      componentWillUnmount() {
+        // Establecer el indicador de montaje a falso al desmontar el componente
+        this.setState({ isMounted: false });
+      }
+
+      fetchUserData() {
+        const currentUser = auth.currentUser;
+    
+        if (currentUser) {
+          db.collection('users')
+            .where('owner', '==', currentUser.email)
+            .onSnapshot((docs) => {
+              let user = [];
+              docs.forEach((doc) => {
+                user.push({
+                  id: doc.id,
+                  data: doc.data(),
+                });
+              });
+              // Actualizar el estado solo si el componente aún está montado
+              if (this.state.isMounted) {
+                this.setState({ user: user[0] });
+              }
+            });
+        } else {
+          console.error('El usuario no está autenticado');
+        }
+      }
 
   fetchUserPosts() {
     const currentUser = auth.currentUser;
@@ -77,13 +86,19 @@ class MyProfile extends Component {
   }
 
   signOut() {
-    auth.signOut()
+    auth
+      .signOut()
       .then(() => {
-        this.props.navigation.navigate('Login');
-        this.forceUpdate();
+        // Verificar si el componente aún está montado antes de actualizar el estado
+        if (this.state.isMounted) {
+          this.setState({ isMounted: false }, () => {
+            this.props.navigation.navigate('Login');
+            this.forceUpdate();
+          });
+        }
       })
       .catch((error) => {
-        console.error("Error during logout:", error);
+        console.error('Error durante el cierre de sesión:', error);
       });
   }
  

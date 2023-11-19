@@ -10,16 +10,16 @@ import Post from '../../components/Post/Post'
 
 const Stack = createNativeStackNavigator()
 
-class BuscadorNavigation extends Component {
+class AddPostNavigation extends Component {
 
   render() {
     return (
       <Stack.Navigator>
-        <Stack.Screen name='Buscador'component={Buscador} options={{ headerShown: false }}/>
-        <Stack.Screen name='FriendProfile'component={FriendProfile} options={{ headerShown: false }}/>
+        <Stack.Screen name='AddPost'component={AddPost} options={{ headerShown: false }}/>
+        <Stack.Screen name='Home'component={Home} options={{ headerShown: false }}/>
       </Stack.Navigator>
     )
   }
 }
 
-export default BuscadorNavigation
+export default AddPostNavigation

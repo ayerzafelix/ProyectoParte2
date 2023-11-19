@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet, View, ActivityIndicator } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import AddPost from '../../screens/AddPost/AddPost'
+import AddPostNavigation from '../../components/AddPostNavigation/AddPostNavigation'
 
 import Login from '../../screens/Login/Login';
 import Register from '../../screens/Register/Register';
@@ -13,10 +13,9 @@ import MyProfileNavigation from '../../components/MyProfileNavigation/MyProfileN
 import Home from '../../screens/Home/Home';
 import FriendProfile from '../../screens/FriendProfile/FriendProfile'
 import Post from '../../components/Post/Post'
+import HomeNavigation from '../../components/HomeNavigation/HomeNavigation'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-const Stack = createNativeStackNavigator();
 
 const Tab = createBottomTabNavigator();
 
@@ -53,9 +52,9 @@ class MenuBar extends Component {
             <NavigationContainer>
                 {this.state.logueado ? (
                     <Tab.Navigator screenOptions={({ route }) => ({ tabBarIcon: ({ color }) => screenOptions(route, color) })}>
-                        <Tab.Screen options={{ headerShown: false }} name="Home" component={() => <Home />} />
+                        <Tab.Screen options={{ headerShown: false }} name="Home" component={() => <HomeNavigation/>} />
                         <Tab.Screen options={{ headerShown: false}} name="Buscador" component={() => <BuscadorNavigation/>} />
-                        <Tab.Screen options={{ headerShown: false, lazy: true }} name="AddPost" component={(drawerProps) => <AddPost drawerProps={drawerProps} />} />
+                        <Tab.Screen options={{ headerShown: false, lazy: true }} name="AddPost" component={(drawerProps) => <AddPostNavigation drawerProps={drawerProps}/>}/> 
                         <Tab.Screen options={{ headerShown: false }} name="MyProfile" component={() => <MyProfileNavigation />} />
                     </Tab.Navigator>)        
                     :
