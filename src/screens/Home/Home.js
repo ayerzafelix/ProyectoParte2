@@ -39,12 +39,19 @@ class Home extends Component {
     console.log(this.state);
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
+
+          <View style={styles.logoSignOut}>
           <TouchableOpacity onPress={this.handleLogout}>
-            <FontAwesome name="sign-out" size={24} color="black" />
+            <FontAwesome name="sign-out" size={30} color="red"/>
+            <Text style={styles.textoSignOut}>Sign out</Text>
           </TouchableOpacity>
-          <Text style={styles.headerText}>HOME</Text>
-        </View>
+          </View>
+          
+          <View>
+          <Text style={styles.titulo}>HOME</Text>
+          </View>
+
+
         <Text style={styles.postListTitle}>Lista de Posts</Text>
         {this.state.listaPost.length === 0 ? (
           <Text style={styles.loadingText}>Cargando...</Text>
@@ -61,6 +68,27 @@ class Home extends Component {
 }
 
 const styles = StyleSheet.create({
+
+  titulo: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginTop: 0, 
+    marginBottom: 20,
+  },
+  textoSignOut:{
+    color: 'red',
+    fontSize: '30',
+    fontWeight: 'bold'
+  }, 
+
+  logoSignOut: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    marginBottom: 20,
+  },
+
+
   container: {
     flex: 1,
     alignItems: 'center',

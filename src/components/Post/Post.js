@@ -163,6 +163,10 @@ class Post extends Component {
               <Text>X</Text>
             </TouchableOpacity>
 
+            <View>
+            <Text style={styles.titulo}> Comentarios del post: </Text>
+            </View>         
+
 
             {
               this.state.listaComentarios ?
@@ -170,7 +174,7 @@ class Post extends Component {
                 <FlatList
                   data={this.state.listaComentarios}
                   keyExtractor={(comentarios) => comentarios.createdAt.toString()}
-                  renderItem={({ item }) => <Text> {item.autor}: {item.comentarios}</Text>}
+                  renderItem={({ item }) => <Text style={styles.losComentarios}> {item.autor}: {item.comentarios}</Text>}
                 /> :
                 <Text>Todavía no hay comentarios</Text>
             }
@@ -178,6 +182,8 @@ class Post extends Component {
 
 
             <View>
+
+
               <TextInput
                 style={styles.comment}
                 placeholder="Escribe un comentario..."
@@ -213,6 +219,22 @@ class Post extends Component {
 
 
 const styles = StyleSheet.create({
+
+  titulo: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+
+  losComentarios:{
+    color: 'rgb(5, 35, 125)',
+  fontSize: 18,
+    width: '30%',
+    height: 30,
+    marginLeft: 5
+  },
+
+
   container: {
     flex: 1,
     alignItems: 'center',
@@ -280,17 +302,24 @@ const styles = StyleSheet.create({
     
   },
   comment: {
+    width: '30%',
+    height: 30,
     borderWidth: 1,
     borderColor: 'black',
+    backgroundColor: 'rgb(227, 227, 227)',
     borderRadius: 5,
     color: "black",
     marginLeft: 5
   },
   commentButton:{
+    fontSize: 20,
+    fontWeight: 'bold',
     color: 'black',
-    marginTop: 20,
+    marginTop: 5,
     marginLeft: 5
   },
+
+
   closeModal: {
     alignSelf: 'flex-end',
     padding: 10,

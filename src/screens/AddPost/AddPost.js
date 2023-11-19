@@ -42,7 +42,7 @@ class AddPost extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.cameraContainer}>
-          <Text style={styles.headerText}>New Post</Text>
+          <Text style={styles.titulo}>New Post</Text>
           <MyCamera style={styles.camera} urlDeFoto={(url) => this.urlDeFoto(url)} />
         </View>
         <View style={styles.form}>
@@ -73,6 +73,14 @@ class AddPost extends Component {
 }
 
 const styles = StyleSheet.create({
+
+  titulo: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginTop: 40, 
+    alignItems: ''
+  },
+
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -82,10 +90,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  headerText: {
-    fontSize: 20,
-    
   },
   form: {
     flex: 1,

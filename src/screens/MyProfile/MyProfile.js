@@ -115,6 +115,7 @@ class MyProfile extends Component {
    
     return (
       <View style={styles.container}>
+              <Text style={styles.titulo}>My Profile</Text>
         <Text style={styles.textUsername}>Username: {user.data.name}</Text>
         <Text style={styles.textEmail}>Email: {user.data.owner}</Text>
         <Text style={styles.textMiniBio}>Mini Bio: {user.data.biografia || 'No mini bio available'}</Text>
@@ -141,13 +142,21 @@ class MyProfile extends Component {
 }
 
 const styles = StyleSheet.create({
+
+  titulo: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginBottom: 15, 
+    alignItems: ''
+  },
+
   container: {
     flex: 1,
     paddingHorizontal: 16,
     paddingTop: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 100
+    marginTop: 20
   },
   loadingContainer: {
     flex: 1,
@@ -180,19 +189,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textUsername: {
+    color: 'rgb(0, 27, 71)',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '500',
     marginBottom: 8,
   },
   textEmail: {
+    color: 'rgb(0, 27, 71)',
     fontSize: 16,
     marginBottom: 8,
   },
   textMiniBio: {
+    color: 'rgb(0, 27, 71)',
     fontSize: 16,
     marginBottom: 8,
   },
   textTotalPosts: {
+    color: 'rgb(0, 27, 71)',
     fontSize: 16,
     marginBottom: 8,
   },

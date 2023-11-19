@@ -60,6 +60,12 @@ class Buscador extends Component {
     render() {
         return (
             <View style={styles.container}>
+
+        <View>
+          <Text style={styles.titulo}>Buscador</Text>
+          </View>
+
+
                 <TextInput
                     style={styles.input}
                     keyboardType='default'
@@ -99,6 +105,15 @@ class Buscador extends Component {
 }
 
 const styles = StyleSheet.create({
+
+    titulo: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        marginTop: 0, 
+        marginBottom: 20,
+      },
+
+
     container: {
         flex: 1,
         backgroundColor: '#fff',
